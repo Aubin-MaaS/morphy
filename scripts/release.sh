@@ -271,8 +271,8 @@ echo -e "    • Publish packages"
 echo ""
 
 # Confirmation
-read -p "$(echo -e "${BOLD}Proceed with release? [y/N]:${NC} ")" -n 1 -r
-echo
+echo -n "$(echo -e "${BOLD}Proceed with release? [y/N]:${NC} ")"
+read REPLY
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     print_error "Release cancelled"
     exit 1
@@ -366,8 +366,8 @@ else
     echo ""
     echo -e "${BOLD}🚨 PUBLISHING TO PUBLIC PUB.DEV 🚨${NC}"
     echo -e "${YELLOW}This will make zikzak_morphy_annotation $NEW_VERSION publicly available${NC}"
-    read -p "$(echo -e "${BOLD}Confirm: Publish zikzak_morphy_annotation $NEW_VERSION to pub.dev? [y/N]:${NC} ")" -n 1 -r
-    echo
+    echo -n "$(echo -e "${BOLD}Confirm: Publish zikzak_morphy_annotation $NEW_VERSION to pub.dev? [y/N]:${NC} ")"
+    read REPLY
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         print_error "Annotation package publication cancelled by user"
         exit 1
@@ -445,8 +445,8 @@ else
     echo ""
     echo -e "${BOLD}🚨 PUBLISHING TO PUBLIC PUB.DEV 🚨${NC}"
     echo -e "${YELLOW}This will make zikzak_morphy $NEW_VERSION publicly available${NC}"
-    read -p "$(echo -e "${BOLD}Confirm: Publish zikzak_morphy $NEW_VERSION to pub.dev? [y/N]:${NC} ")" -n 1 -r
-    echo
+    echo -n "$(echo -e "${BOLD}Confirm: Publish zikzak_morphy $NEW_VERSION to pub.dev? [y/N]:${NC} ")"
+    read REPLY
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         print_error "Main package publication cancelled by user"
         exit 1
