@@ -28,7 +28,7 @@ abstract class $Dog implements $Pet {
 
 enum eFishColour { gold, silver, nemo }
 
-@Morphy(generateJson: true)
+@Morphy(generateJson: true, generateCopyWithFn: true)
 abstract class $Fish implements $Pet {
   eFishColour get fishColour;
 }
