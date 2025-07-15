@@ -1,4 +1,44 @@
-## 2.0.0
+# Changelog
+
+## [2.1.0] - 2025-07-15
+
+### Added
+- TODO: Add release notes for version 2.1.0
+
+### Fixed
+- Fixed constructor accessibility issue in cross-file entity extension
+- Updated changeTo, copyWith, and patchWith methods to use public constructors
+
+
+## [2.1.0] - 2025-07-15
+
+### Added
+- TODO: Add release notes for version 2.1.0
+
+### Fixed
+- Fixed constructor accessibility issue in cross-file entity extension
+- Updated changeTo, copyWith, and patchWith methods to use public constructors
+
+
+## [2.1.0] - 2025-07-15
+
+### Added
+- TODO: Add release notes for version 2.1.0
+
+### Fixed
+- Fixed constructor accessibility issue in cross-file entity extension
+- Updated changeTo, copyWith, and patchWith methods to use public constructors
+
+
+## [2.1.0] - 2025-07-15
+
+### Added
+- TODO: Add release notes for version 2.1.0
+
+### Fixed
+- Fixed constructor accessibility issue in cross-file entity extension
+- Updated changeTo, copyWith, and patchWith methods to use public constructors
+
 - BREAKING CHANGES! copyWith_A is now copyWithA and changeTo_A is now changeToA
 - This is to make the naming more consistent with dart conventions
 - merged the PRs that allow to set explicitToJson false
