@@ -274,7 +274,7 @@ packages:
     source: hosted
     version: "0.7.2"
   json_annotation:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: json_annotation
       sha256: "1ce844379ca14835a50d2f019a3099f419082cfdd231cd86a142af94dd5c6bb1"
@@ -599,13 +599,13 @@ packages:
       path: "../zikzak_morphy"
       relative: true
     source: path
-    version: "2.0.0"
+    version: "2.1.0"
   zikzak_morphy_annotation:
     dependency: "direct main"
     description:
       path: "../zikzak_morphy_annotation"
       relative: true
     source: path
-    version: "2.0.0"
+    version: "2.1.0"
 sdks:
   dart: ">=3.8.0 <4.0.0"

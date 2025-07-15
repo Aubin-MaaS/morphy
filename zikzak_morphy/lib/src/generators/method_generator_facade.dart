@@ -19,6 +19,7 @@ class MethodGeneratorFacade {
     bool generateCopyWithFn = false,
     List<String> knownClasses = const [],
     List<NameType> classGenerics = const [],
+    bool nonSealed = false,
   }) {
     final methods = <String>[];
 
@@ -32,6 +33,7 @@ class MethodGeneratorFacade {
       interfaceGenerics: interfaceGenerics,
       classGenerics: classGenerics,
       knownClasses: knownClasses,
+      nonSealed: nonSealed,
     );
 
     if (copyWithMethod.isNotEmpty) {
@@ -70,6 +72,7 @@ class MethodGeneratorFacade {
     bool generatePatchWithFn = false,
     List<String> knownClasses = const [],
     List<NameType> classGenerics = const [],
+    bool nonSealed = false,
   }) {
     final methods = <String>[];
 
@@ -83,6 +86,7 @@ class MethodGeneratorFacade {
       interfaceGenerics: interfaceGenerics,
       classGenerics: classGenerics,
       knownClasses: knownClasses,
+      nonSealed: nonSealed,
     );
 
     if (patchWithMethod.isNotEmpty) {
@@ -121,6 +125,7 @@ class MethodGeneratorFacade {
     bool isInterfaceSealed = false,
     bool generateChangeToFn = false,
     List<NameType> classGenerics = const [],
+    bool nonSealed = false,
   }) {
     final methods = <String>[];
 
@@ -193,6 +198,7 @@ class MethodGeneratorFacade {
     List<String> knownClasses = const [],
     List<NameType> classGenerics = const [],
     bool isInterfaceSealed = false,
+    bool nonSealed = false,
   }) {
     final methods = <String>[];
 
@@ -207,6 +213,7 @@ class MethodGeneratorFacade {
       generateCopyWithFn: generateCopyWithFn,
       knownClasses: knownClasses,
       classGenerics: classGenerics,
+      nonSealed: nonSealed,
     );
 
     if (copyWithMethods.isNotEmpty) {
@@ -224,6 +231,7 @@ class MethodGeneratorFacade {
       generatePatchWithFn: generatePatchWithFn,
       knownClasses: knownClasses,
       classGenerics: classGenerics,
+      nonSealed: nonSealed,
     );
 
     if (patchWithMethods.isNotEmpty) {
@@ -262,6 +270,7 @@ class MethodGeneratorFacade {
     List<String> knownClasses = const [],
     List<NameType> classGenerics = const [],
     Map<String, bool> interfaceSealedMap = const {},
+    bool nonSealed = false,
   }) {
     final allMethods = <String>[];
 
@@ -307,6 +316,8 @@ class MethodGeneratorFacade {
           isClassAbstract: isClassAbstract,
           interfaceSealedMap: interfaceSealedMap,
           knownClasses: knownClasses,
+          classGenerics: classGenerics,
+          nonSealed: nonSealed,
         );
 
     if (changeToMethods.isNotEmpty) {

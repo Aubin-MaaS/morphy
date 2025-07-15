@@ -16,8 +16,17 @@ class ChangeToMethodGenerator {
     List<String> knownClasses = const [],
     bool isInterfaceSealed = false,
     List<NameType> classGenerics = const [],
+    bool nonSealed = false,
   }) {
-    if (NameCleaner.isAbstract(interfaceName) || isInterfaceSealed) return '';
+    // For nonSealed classes, allow method generation even if interface name starts with $$
+    // if it's the class's own interface (cleaned names match)
+    if (NameCleaner.isAbstract(interfaceName)) {
+      if (!nonSealed ||
+          NameCleaner.clean(interfaceName) != NameCleaner.clean(className)) {
+        return '';
+      }
+    }
+    if (isInterfaceSealed) return '';
 
     final cleanInterfaceName = NameCleaner.clean(interfaceName);
     // Use class generics for type parameters when class is generic
@@ -120,9 +129,10 @@ class ChangeToMethodGenerator {
     required Map<String, List<NameType>> interfaceGenericsMap,
     required String className,
     required bool isClassAbstract,
-    List<String> knownClasses = const [],
     Map<String, bool> interfaceSealedMap = const {},
+    List<String> knownClasses = const [],
     List<NameType> classGenerics = const [],
+    bool nonSealed = false,
   }) {
     final methods = <String>[];
 
@@ -141,6 +151,7 @@ class ChangeToMethodGenerator {
         knownClasses: knownClasses,
         isInterfaceSealed: isInterfaceSealed,
         classGenerics: classGenerics,
+        nonSealed: nonSealed,
       );
 
       if (method.isNotEmpty) {
@@ -160,8 +171,18 @@ class ChangeToMethodGenerator {
     required List<NameType> interfaceGenerics,
     List<String> knownClasses = const [],
     bool isInterfaceSealed = false,
+    List<NameType> classGenerics = const [],
+    bool nonSealed = false,
   }) {
-    if (NameCleaner.isAbstract(interfaceName) || isInterfaceSealed) return '';
+    // For nonSealed classes, allow method generation even if interface name starts with $$
+    // if it's the class's own interface (cleaned names match)
+    if (NameCleaner.isAbstract(interfaceName)) {
+      if (!nonSealed ||
+          NameCleaner.clean(interfaceName) != NameCleaner.clean(className)) {
+        return '';
+      }
+    }
+    if (isInterfaceSealed) return '';
 
     final cleanInterfaceName = NameCleaner.clean(interfaceName);
     final typeParams = TypeResolver.generateTypeParams(interfaceGenerics);

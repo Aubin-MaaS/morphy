@@ -15,8 +15,16 @@ class PatchWithMethodGenerator {
     required List<NameType> interfaceGenerics,
     List<NameType> classGenerics = const [],
     List<String> knownClasses = const [],
+    bool nonSealed = false,
   }) {
-    if (NameCleaner.isAbstract(interfaceName)) return '';
+    // For nonSealed classes, allow method generation even if interface name starts with $$
+    // if it's the class's own interface (cleaned names match)
+    if (NameCleaner.isAbstract(interfaceName)) {
+      if (!nonSealed ||
+          NameCleaner.clean(interfaceName) != NameCleaner.clean(className)) {
+        return '';
+      }
+    }
 
     final cleanClassName = NameCleaner.clean(className);
     final cleanInterfaceName = NameCleaner.clean(interfaceName);
@@ -97,6 +105,7 @@ class PatchWithMethodGenerator {
     required bool isClassAbstract,
     List<NameType> classGenerics = const [],
     List<String> knownClasses = const [],
+    bool nonSealed = false,
   }) {
     final methods = <String>[];
 
@@ -113,6 +122,7 @@ class PatchWithMethodGenerator {
         interfaceGenerics: interfaceGenerics,
         classGenerics: classGenerics,
         knownClasses: knownClasses,
+        nonSealed: nonSealed,
       );
 
       if (method.isNotEmpty) {
@@ -132,8 +142,16 @@ class PatchWithMethodGenerator {
     required List<NameType> interfaceGenerics,
     List<NameType> classGenerics = const [],
     List<String> knownClasses = const [],
+    bool nonSealed = false,
   }) {
-    if (NameCleaner.isAbstract(interfaceName)) return '';
+    // For nonSealed classes, allow method generation even if interface name starts with $$
+    // if it's the class's own interface (cleaned names match)
+    if (NameCleaner.isAbstract(interfaceName)) {
+      if (!nonSealed ||
+          NameCleaner.clean(interfaceName) != NameCleaner.clean(className)) {
+        return '';
+      }
+    }
 
     final cleanClassName = NameCleaner.clean(className);
     final cleanInterfaceName = NameCleaner.clean(interfaceName);

@@ -204,6 +204,7 @@ String createMorphy(
           classGenerics: classGenerics
               .map((e) => NameType(e.name, e.type))
               .toList(),
+          nonSealed: nonSealed,
         ),
       );
       // Generate changeTo methods for inherited interfaces (upward conversion: child to parent)
@@ -221,6 +222,7 @@ String createMorphy(
             classGenerics: classGenerics
                 .map((e) => NameType(e.name, e.type))
                 .toList(),
+            nonSealed: nonSealed,
           ),
         );
       }

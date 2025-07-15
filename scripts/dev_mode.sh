@@ -2,8 +2,13 @@
 
 # 🔥 ZIKZAK MORPHY - DEV MODE SCRIPT 🔥
 # Development mode script for local development and testing
+# Automatically switches dependencies between local paths (dev) and hosted packages (prod)
+# Usage: ./dev_mode.sh [dev|prod]
 
 set -e
+
+# Default mode is dev
+MODE="${1:-dev}"
 
 # Colors for output
 RED='\033[0;31m'
@@ -19,6 +24,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
 echo -e "${PURPLE}🔥 ZIKZAK MORPHY DEV MODE 🔥${NC}"
+echo -e "${CYAN}Mode: ${MODE}${NC}"
 echo -e "${CYAN}======================================${NC}"
 
 # Function to print colored status
@@ -65,6 +71,109 @@ run_command_soft() {
     fi
 }
 
+# Function to switch dependencies to dev mode (local paths)
+switch_to_dev_mode() {
+    print_status "🔧 Switching to DEV mode (local paths)..."
+
+    # zikzak_morphy: use local annotation
+    cat > "$PROJECT_ROOT/zikzak_morphy/pubspec.yaml" << 'EOF'
+name: zikzak_morphy
+description: A powerful code generation package for Dart/Flutter that provides clean class definitions with copyWith, JSON serialization, toString, equality, and inheritance support
+version: 2.1.0
+homepage: https://github.com/arrrrny/morphy
+
+environment:
+  sdk: ">=3.8.0 <4.0.0"
+
+dependencies:
+  zikzak_morphy_annotation:
+    path: ../zikzak_morphy_annotation
+  analyzer: ^7.5.7
+  build: ^2.5.4
+  source_gen: ^2.0.0
+  dartx: ^1.2.0
+  quiver: ^3.2.2
+  path: ^1.9.0
+
+dev_dependencies:
+  build_runner: ^2.5.4
+  test: ^1.26.2
+EOF
+
+    # example: use local paths for both
+    cat > "$PROJECT_ROOT/example/pubspec.yaml" << 'EOF'
+name: example
+publish_to: "none"
+
+environment:
+  sdk: ">=3.8.0 <4.0.0"
+
+dependencies:
+  zikzak_morphy_annotation:
+    path: ../zikzak_morphy_annotation
+  json_annotation: ^4.9.0
+
+dev_dependencies:
+  test: ^1.26.2
+  build_runner: ^2.5.4
+  zikzak_morphy:
+    path: ../zikzak_morphy
+  json_serializable: ^6.8.0
+EOF
+
+    print_success "Switched to DEV mode"
+}
+
+# Function to switch dependencies to production mode (hosted packages)
+switch_to_prod_mode() {
+    print_status "🔧 Switching to PROD mode (hosted packages)..."
+
+    # zikzak_morphy: use hosted annotation
+    cat > "$PROJECT_ROOT/zikzak_morphy/pubspec.yaml" << 'EOF'
+name: zikzak_morphy
+description: A powerful code generation package for Dart/Flutter that provides clean class definitions with copyWith, JSON serialization, toString, equality, and inheritance support
+version: 2.1.0
+homepage: https://github.com/arrrrny/morphy
+
+environment:
+  sdk: ">=3.8.0 <4.0.0"
+
+dependencies:
+  zikzak_morphy_annotation: ^2.1.0
+  analyzer: ^7.5.7
+  build: ^2.5.4
+  source_gen: ^2.0.0
+  dartx: ^1.2.0
+  quiver: ^3.2.2
+  path: ^1.9.0
+
+dev_dependencies:
+  build_runner: ^2.5.4
+  test: ^1.26.2
+EOF
+
+    # example: use hosted packages
+    cat > "$PROJECT_ROOT/example/pubspec.yaml" << 'EOF'
+name: example
+publish_to: "none"
+
+environment:
+  sdk: ">=3.8.0 <4.0.0"
+
+dependencies:
+  zikzak_morphy_annotation: ^2.1.0
+  json_annotation: ^4.9.0
+
+dev_dependencies:
+  test: ^1.26.2
+  build_runner: ^2.5.4
+  zikzak_morphy: ^2.1.0
+  json_serializable: ^6.8.0
+EOF
+
+    print_success "Switched to PROD mode"
+}
+
 # Check if we're in the right directory
 if [ ! -d "$PROJECT_ROOT/zikzak_morphy" ] || [ ! -d "$PROJECT_ROOT/zikzak_morphy_annotation" ]; then
     print_error "Must be run from morphy project root or scripts directory"
@@ -75,6 +184,14 @@ fi
 cd "$PROJECT_ROOT"
 
 echo -e "${CYAN}Project Root: ${PROJECT_ROOT}${NC}"
+echo ""
+
+# Switch dependency mode based on parameter
+if [ "$MODE" = "prod" ]; then
+    switch_to_prod_mode
+else
+    switch_to_dev_mode
+fi
 echo ""
 
 # Clean all build artifacts

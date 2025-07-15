@@ -580,10 +580,9 @@ packages:
   zikzak_morphy_annotation:
     dependency: "direct main"
     description:
-      name: zikzak_morphy_annotation
-      sha256: a9677838cd8a638bdfcd86a16525d4a332cdc0fa3bc04364e15fd27bc5600b26
-      url: "https://pub.dev"
-    source: hosted
+      path: "../zikzak_morphy_annotation"
+      relative: true
+    source: path
     version: "2.1.0"
 sdks:
   dart: ">=3.8.0 <4.0.0"

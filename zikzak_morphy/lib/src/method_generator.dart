@@ -21,6 +21,7 @@ class MethodGenerator {
     bool generateCopyWithFn = false,
     List<String> knownClasses = const [],
     List<NameType> classGenerics = const [],
+    bool nonSealed = false,
   }) {
     final methods = <String>[];
 
@@ -35,6 +36,7 @@ class MethodGenerator {
       generateCopyWithFn: generateCopyWithFn,
       knownClasses: knownClasses,
       classGenerics: classGenerics,
+      nonSealed: nonSealed,
     );
 
     if (copyWithMethods.isNotEmpty) {
@@ -52,6 +54,7 @@ class MethodGenerator {
       generatePatchWithFn: generateCopyWithFn, // Use same flag for consistency
       knownClasses: knownClasses,
       classGenerics: classGenerics,
+      nonSealed: nonSealed,
     );
 
     if (patchWithMethods.isNotEmpty) {
@@ -72,6 +75,7 @@ class MethodGenerator {
     List<String> knownClasses = const [],
     bool isInterfaceSealed = false,
     List<NameType> classGenerics = const [],
+    bool nonSealed = false,
   }) {
     return MethodGeneratorFacade.generateChangeToMethods(
       classFields: classFields,
@@ -83,6 +87,7 @@ class MethodGenerator {
       knownClasses: knownClasses,
       isInterfaceSealed: isInterfaceSealed,
       classGenerics: classGenerics,
+      nonSealed: nonSealed,
     );
   }
 
@@ -115,6 +120,7 @@ class MethodGenerator {
     List<String> knownClasses = const [],
     bool isInterfaceSealed = false,
     List<NameType> classGenerics = const [],
+    bool nonSealed = false,
   }) {
     return MethodGeneratorFacade.generateAllMethods(
       classFields: classFields,
@@ -129,6 +135,7 @@ class MethodGenerator {
       knownClasses: knownClasses,
       isInterfaceSealed: isInterfaceSealed,
       classGenerics: classGenerics,
+      nonSealed: nonSealed,
     );
   }
 
@@ -143,6 +150,7 @@ class MethodGenerator {
     List<String> knownClasses = const [],
     Map<String, bool> interfaceSealedMap = const {},
     List<NameType> classGenerics = const [],
+    bool nonSealed = false,
   }) {
     return MethodGeneratorFacade.generateMultipleInterfaceMethods(
       classFields: classFields,
@@ -155,6 +163,7 @@ class MethodGenerator {
       knownClasses: knownClasses,
       interfaceSealedMap: interfaceSealedMap,
       classGenerics: classGenerics,
+      nonSealed: nonSealed,
     );
   }
 
