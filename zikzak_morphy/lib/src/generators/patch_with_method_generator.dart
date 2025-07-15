@@ -4,6 +4,7 @@ import 'parameter_generator.dart';
 import 'constructor_parameter_generator.dart';
 
 /// Generates patchWith methods that accept PatchInput parameters
+/// Generates patchWith methods that create new instances using patch objects
 class PatchWithMethodGenerator {
   /// Generate a patchWith method for an interface
   static String generatePatchWithMethod({
@@ -12,10 +13,11 @@ class PatchWithMethodGenerator {
     required String interfaceName,
     required String className,
     required bool isClassAbstract,
-    required List<NameType> interfaceGenerics,
-    List<NameType> classGenerics = const [],
+    List<NameType> interfaceGenerics = const [],
     List<String> knownClasses = const [],
+    List<NameType> classGenerics = const [],
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
   }) {
     // For nonSealed classes, allow method generation even if interface name starts with $$
     // if it's the class's own interface (cleaned names match)
@@ -45,13 +47,18 @@ class PatchWithMethodGenerator {
           knownClasses,
         );
 
+    final constructorName = MethodGeneratorCommons.getConstructorName(
+      NameCleaner.clean(className),
+      hidePublicConstructor,
+    );
+
     return '''
       $cleanClassName$typeParams patchWith$cleanInterfaceName({
         ${cleanInterfaceName}Patch? patchInput,
       }) {
         final _patcher = patchInput ?? ${cleanInterfaceName}Patch();
         final _patchMap = _patcher.toPatch();
-        return $cleanClassName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return $constructorName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 
@@ -61,6 +68,7 @@ class PatchWithMethodGenerator {
     required String className,
     required List<NameType> classGenerics,
     List<String> knownClasses = const [],
+    bool hidePublicConstructor = false,
   }) {
     final cleanClassName = NameCleaner.clean(className);
     final typeParams = TypeResolver.generateTypeParams(
@@ -70,7 +78,12 @@ class PatchWithMethodGenerator {
 
     final constructorParams = _generateSimpleClassPatchConstructorParams(
       classFields,
-      cleanClassName,
+      NameCleaner.clean(className),
+    );
+
+    final constructorName = MethodGeneratorCommons.getConstructorName(
+      NameCleaner.clean(className),
+      hidePublicConstructor,
     );
 
     return '''
@@ -79,7 +92,7 @@ class PatchWithMethodGenerator {
       }) {
         final _patcher = patchInput ?? ${cleanClassName}Patch();
         final _patchMap = _patcher.toPatch();
-        return $cleanClassName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return $constructorName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 
@@ -103,9 +116,10 @@ class PatchWithMethodGenerator {
     required Map<String, List<NameType>> interfaceGenericsMap,
     required String className,
     required bool isClassAbstract,
-    List<NameType> classGenerics = const [],
     List<String> knownClasses = const [],
+    List<NameType> classGenerics = const [],
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
   }) {
     final methods = <String>[];
 
@@ -123,6 +137,7 @@ class PatchWithMethodGenerator {
         classGenerics: classGenerics,
         knownClasses: knownClasses,
         nonSealed: nonSealed,
+        hidePublicConstructor: hidePublicConstructor,
       );
 
       if (method.isNotEmpty) {
@@ -143,6 +158,7 @@ class PatchWithMethodGenerator {
     List<NameType> classGenerics = const [],
     List<String> knownClasses = const [],
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
   }) {
     // For nonSealed classes, allow method generation even if interface name starts with $$
     // if it's the class's own interface (cleaned names match)
@@ -184,6 +200,11 @@ class PatchWithMethodGenerator {
           knownClasses,
         );
 
+    final constructorName = MethodGeneratorCommons.getConstructorName(
+      NameCleaner.clean(className),
+      hidePublicConstructor,
+    );
+
     return '''
       $cleanClassName$typeParams patchWith${cleanInterfaceName}Hybrid({
         ${cleanInterfaceName}Patch? patchInput,${parameters.isNotEmpty ? '\n        $parameters' : ''}
@@ -191,7 +212,7 @@ class PatchWithMethodGenerator {
         final _patcher = patchInput ?? ${cleanInterfaceName}Patch();
         $patchAssignments
         final _patchMap = _patcher.toPatch();
-        return $cleanClassName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return $constructorName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 
@@ -202,8 +223,10 @@ class PatchWithMethodGenerator {
     required String interfaceName,
     required String className,
     required List<NameType> interfaceGenerics,
-    List<NameType> classGenerics = const [],
     List<String> knownClasses = const [],
+    List<NameType> classGenerics = const [],
+    bool nonSealed = false,
+    bool hidePublicConstructor = false,
   }) {
     if (NameCleaner.isAbstract(interfaceName)) return '';
 
@@ -236,6 +259,11 @@ class PatchWithMethodGenerator {
           knownClasses,
         );
 
+    final constructorName = MethodGeneratorCommons.getConstructorName(
+      NameCleaner.clean(className),
+      hidePublicConstructor,
+    );
+
     return '''
       $cleanClassName$typeParams patchWith${cleanInterfaceName}Fn({
         ${cleanInterfaceName}Patch? patchInput,${parameters.isNotEmpty ? '\n        $parameters' : ''}
@@ -243,7 +271,7 @@ class PatchWithMethodGenerator {
         final _patcher = patchInput ?? ${cleanInterfaceName}Patch();
         $patchAssignments
         final _patchMap = _patcher.toPatch();
-        return $cleanClassName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return $constructorName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 

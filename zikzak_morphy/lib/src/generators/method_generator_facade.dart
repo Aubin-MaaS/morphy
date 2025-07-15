@@ -20,6 +20,7 @@ class MethodGeneratorFacade {
     List<String> knownClasses = const [],
     List<NameType> classGenerics = const [],
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
   }) {
     final methods = <String>[];
 
@@ -34,6 +35,7 @@ class MethodGeneratorFacade {
       classGenerics: classGenerics,
       knownClasses: knownClasses,
       nonSealed: nonSealed,
+      hidePublicConstructor: hidePublicConstructor,
     );
 
     if (copyWithMethod.isNotEmpty) {
@@ -51,6 +53,7 @@ class MethodGeneratorFacade {
             interfaceGenerics: interfaceGenerics,
             classGenerics: classGenerics,
             knownClasses: knownClasses,
+            hidePublicConstructor: hidePublicConstructor,
           );
 
       if (functionMethod.isNotEmpty) {
@@ -73,6 +76,7 @@ class MethodGeneratorFacade {
     List<String> knownClasses = const [],
     List<NameType> classGenerics = const [],
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
   }) {
     final methods = <String>[];
 
@@ -87,6 +91,7 @@ class MethodGeneratorFacade {
       classGenerics: classGenerics,
       knownClasses: knownClasses,
       nonSealed: nonSealed,
+      hidePublicConstructor: hidePublicConstructor,
     );
 
     if (patchWithMethod.isNotEmpty) {
@@ -121,11 +126,13 @@ class MethodGeneratorFacade {
     required String className,
     required bool isClassAbstract,
     List<NameType> interfaceGenerics = const [],
-    List<String> knownClasses = const [],
     bool isInterfaceSealed = false,
-    bool generateChangeToFn = false,
+    List<String> knownClasses = const [],
     List<NameType> classGenerics = const [],
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
+    bool interfaceHidePublicConstructor = false,
+    bool generateChangeToFn = false,
   }) {
     final methods = <String>[];
 
@@ -141,6 +148,8 @@ class MethodGeneratorFacade {
       isInterfaceSealed: isInterfaceSealed,
       classGenerics: classGenerics,
       nonSealed: nonSealed,
+      hidePublicConstructor: hidePublicConstructor,
+      interfaceHidePublicConstructor: interfaceHidePublicConstructor,
     );
 
     if (changeToMethod.isNotEmpty) {
@@ -158,6 +167,8 @@ class MethodGeneratorFacade {
             interfaceGenerics: interfaceGenerics,
             knownClasses: knownClasses,
             isInterfaceSealed: isInterfaceSealed,
+            hidePublicConstructor: hidePublicConstructor,
+            interfaceHidePublicConstructor: interfaceHidePublicConstructor,
           );
 
       if (changeToFnMethod.isNotEmpty) {
@@ -200,6 +211,7 @@ class MethodGeneratorFacade {
     List<NameType> classGenerics = const [],
     bool isInterfaceSealed = false,
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
   }) {
     final methods = <String>[];
 
@@ -215,6 +227,7 @@ class MethodGeneratorFacade {
       knownClasses: knownClasses,
       classGenerics: classGenerics,
       nonSealed: nonSealed,
+      hidePublicConstructor: hidePublicConstructor,
     );
 
     if (copyWithMethods.isNotEmpty) {
@@ -233,6 +246,7 @@ class MethodGeneratorFacade {
       knownClasses: knownClasses,
       classGenerics: classGenerics,
       nonSealed: nonSealed,
+      hidePublicConstructor: hidePublicConstructor,
     );
 
     if (patchWithMethods.isNotEmpty) {
@@ -272,6 +286,7 @@ class MethodGeneratorFacade {
     List<NameType> classGenerics = const [],
     Map<String, bool> interfaceSealedMap = const {},
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
   }) {
     final allMethods = <String>[];
 
@@ -319,6 +334,7 @@ class MethodGeneratorFacade {
           knownClasses: knownClasses,
           classGenerics: classGenerics,
           nonSealed: nonSealed,
+          hidePublicConstructor: hidePublicConstructor,
         );
 
     if (changeToMethods.isNotEmpty) {
@@ -337,6 +353,7 @@ class MethodGeneratorFacade {
     bool generatePatchWith = true,
     bool generateChangeTo = true,
     List<String> knownClasses = const [],
+    bool hidePublicConstructor = false,
   }) {
     final methods = <String>[];
 
@@ -347,6 +364,7 @@ class MethodGeneratorFacade {
             className: className,
             classGenerics: classGenerics,
             knownClasses: knownClasses,
+            hidePublicConstructor: hidePublicConstructor,
           );
 
       if (copyWithMethod.isNotEmpty) {
@@ -361,6 +379,7 @@ class MethodGeneratorFacade {
             className: className,
             classGenerics: classGenerics,
             knownClasses: knownClasses,
+            hidePublicConstructor: hidePublicConstructor,
           );
 
       if (patchWithMethod.isNotEmpty) {
@@ -375,6 +394,7 @@ class MethodGeneratorFacade {
             className: className,
             classGenerics: classGenerics,
             knownClasses: knownClasses,
+            hidePublicConstructor: hidePublicConstructor,
           );
 
       if (changeToMethod.isNotEmpty) {

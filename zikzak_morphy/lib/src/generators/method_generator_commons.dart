@@ -42,6 +42,14 @@ class MethodGeneratorCommons {
         type.endsWith(')');
   }
 
+  /// Get the correct constructor name based on hidePublicConstructor setting
+  static String getConstructorName(
+    String className,
+    bool hidePublicConstructor,
+  ) {
+    return hidePublicConstructor ? '$className._' : className;
+  }
+
   /// Check if a type needs patch handling
   static bool needsPatchHandling(
     String baseType,

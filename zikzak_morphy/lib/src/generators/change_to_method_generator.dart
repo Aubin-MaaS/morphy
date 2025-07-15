@@ -17,22 +17,35 @@ class ChangeToMethodGenerator {
     bool isInterfaceSealed = false,
     List<NameType> classGenerics = const [],
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
+    bool interfaceHidePublicConstructor = false,
   }) {
-    // For abstract interfaces (starting with $$), check if the interface itself is sealed
-    // Allow generation for nonSealed interfaces (marked with nonSealed: true)
+    // Never generate changeTo methods for sealed interfaces (starting with $$)
+    // These cannot be instantiated directly
     if (NameCleaner.isAbstract(interfaceName)) {
-      // If the interface is sealed, skip generation unless it's the class's own interface
-      if (isInterfaceSealed &&
-          NameCleaner.clean(interfaceName) != NameCleaner.clean(className)) {
-        return '';
-      }
+      return '';
+    }
+
+    // Never generate changeTo methods for explicitly sealed interfaces
+    if (isInterfaceSealed) {
+      return '';
+    }
+
+    // Never generate changeTo methods for interfaces with hidePublicConstructor: true
+    // because they don't have a public constructor to call
+    if (interfaceHidePublicConstructor) {
+      return '';
     }
 
     final cleanInterfaceName = NameCleaner.clean(interfaceName);
-    // Use class generics for type parameters when class is generic
-    final typeParams = classGenerics.isNotEmpty
+    // Determine if this is a changeTo method for an explicitSubType (when interface != class)
+    final isExplicitSubType =
+        NameCleaner.clean(interfaceName) != NameCleaner.clean(className);
+
+    // For explicitSubTypes with generics, make the method generic
+    final typeParams = isExplicitSubType && interfaceGenerics.isNotEmpty
         ? TypeResolver.generateTypeParams(
-            classGenerics,
+            interfaceGenerics,
             isAbstractInterface: true,
           )
         : '';
@@ -66,11 +79,11 @@ class ChangeToMethodGenerator {
     }
 
     return '''
-      $cleanInterfaceName changeTo$cleanInterfaceName(${parameters.isNotEmpty ? '{\n        $parameters\n      }' : ''}) {
+      $cleanInterfaceName$typeParams changeTo$cleanInterfaceName$typeParams(${parameters.isNotEmpty ? '{\n        $parameters\n      }' : ''}) {
         final _patcher = ${cleanInterfaceName}Patch();
         $patchAssignments
         final _patchMap = _patcher.toPatch();
-        return $cleanInterfaceName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return ${MethodGeneratorCommons.getConstructorName(cleanInterfaceName, hidePublicConstructor)}(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 
@@ -80,6 +93,7 @@ class ChangeToMethodGenerator {
     required String className,
     required List<NameType> classGenerics,
     List<String> knownClasses = const [],
+    bool hidePublicConstructor = false,
   }) {
     final cleanClassName = NameCleaner.clean(className);
     final typeParams = TypeResolver.generateTypeParams(classGenerics);
@@ -105,7 +119,7 @@ class ChangeToMethodGenerator {
         final _patcher = ${cleanClassName}Patch();
         $patchAssignments
         final _patchMap = _patcher.toPatch();
-        return $cleanClassName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return ${MethodGeneratorCommons.getConstructorName(cleanClassName, hidePublicConstructor)}(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 
@@ -133,6 +147,8 @@ class ChangeToMethodGenerator {
     List<String> knownClasses = const [],
     List<NameType> classGenerics = const [],
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
+    Map<String, bool> interfaceHidePublicConstructorMap = const {},
   }) {
     final methods = <String>[];
 
@@ -140,6 +156,8 @@ class ChangeToMethodGenerator {
     interfaceFieldsMap.forEach((interfaceName, interfaceFields) {
       final interfaceGenerics = interfaceGenericsMap[interfaceName] ?? [];
       final isInterfaceSealed = interfaceSealedMap[interfaceName] ?? false;
+      final interfaceHidePublicConstructor =
+          interfaceHidePublicConstructorMap[interfaceName] ?? false;
 
       final method = generateChangeToMethod(
         classFields: classFields,
@@ -152,6 +170,8 @@ class ChangeToMethodGenerator {
         isInterfaceSealed: isInterfaceSealed,
         classGenerics: classGenerics,
         nonSealed: nonSealed,
+        hidePublicConstructor: hidePublicConstructor,
+        interfaceHidePublicConstructor: interfaceHidePublicConstructor,
       );
 
       if (method.isNotEmpty) {
@@ -173,15 +193,22 @@ class ChangeToMethodGenerator {
     bool isInterfaceSealed = false,
     List<NameType> classGenerics = const [],
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
+    bool interfaceHidePublicConstructor = false,
   }) {
-    // For abstract interfaces (starting with $$), check if the interface itself is sealed
-    // Allow generation for nonSealed interfaces (marked with nonSealed: true)
+    // Never generate changeTo methods for sealed interfaces (starting with $$)
     if (NameCleaner.isAbstract(interfaceName)) {
-      // If the interface is sealed, skip generation unless it's the class's own interface
-      if (isInterfaceSealed &&
-          NameCleaner.clean(interfaceName) != NameCleaner.clean(className)) {
-        return '';
-      }
+      return '';
+    }
+
+    // Never generate changeTo methods for explicitly sealed interfaces
+    if (isInterfaceSealed) {
+      return '';
+    }
+
+    // Never generate changeTo methods for interfaces with hidePublicConstructor: true
+    if (interfaceHidePublicConstructor) {
+      return '';
     }
 
     final cleanInterfaceName = NameCleaner.clean(interfaceName);
@@ -215,7 +242,7 @@ class ChangeToMethodGenerator {
         final _patcher = ${cleanInterfaceName}Patch();
         $patchAssignments
         final _patchMap = _patcher.toPatch();
-        return $cleanInterfaceName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return ${MethodGeneratorCommons.getConstructorName(cleanInterfaceName, hidePublicConstructor)}(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 
@@ -229,8 +256,14 @@ class ChangeToMethodGenerator {
     required List<NameType> interfaceGenerics,
     List<String> knownClasses = const [],
     bool isInterfaceSealed = false,
+    bool hidePublicConstructor = false,
+    bool interfaceHidePublicConstructor = false,
   }) {
+    // Never generate changeTo methods for sealed/abstract interfaces
     if (NameCleaner.isAbstract(interfaceName) || isInterfaceSealed) return '';
+
+    // Never generate changeTo methods for interfaces with hidePublicConstructor: true
+    if (interfaceHidePublicConstructor) return '';
 
     final cleanInterfaceName = NameCleaner.clean(interfaceName);
     final typeParams = TypeResolver.generateTypeParams(interfaceGenerics);
@@ -267,7 +300,7 @@ class ChangeToMethodGenerator {
         final _patcher = ${cleanInterfaceName}Patch();
         $patchAssignments
         final _patchMap = _patcher.toPatch();
-        return $cleanInterfaceName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return ${MethodGeneratorCommons.getConstructorName(cleanInterfaceName, hidePublicConstructor)}(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 

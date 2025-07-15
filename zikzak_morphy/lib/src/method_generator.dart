@@ -22,6 +22,7 @@ class MethodGenerator {
     List<String> knownClasses = const [],
     List<NameType> classGenerics = const [],
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
   }) {
     final methods = <String>[];
 
@@ -37,6 +38,7 @@ class MethodGenerator {
       knownClasses: knownClasses,
       classGenerics: classGenerics,
       nonSealed: nonSealed,
+      hidePublicConstructor: hidePublicConstructor,
     );
 
     if (copyWithMethods.isNotEmpty) {
@@ -55,6 +57,7 @@ class MethodGenerator {
       knownClasses: knownClasses,
       classGenerics: classGenerics,
       nonSealed: nonSealed,
+      hidePublicConstructor: hidePublicConstructor,
     );
 
     if (patchWithMethods.isNotEmpty) {
@@ -76,6 +79,8 @@ class MethodGenerator {
     bool isInterfaceSealed = false,
     List<NameType> classGenerics = const [],
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
+    bool interfaceHidePublicConstructor = false,
   }) {
     return MethodGeneratorFacade.generateChangeToMethods(
       classFields: classFields,
@@ -88,6 +93,8 @@ class MethodGenerator {
       knownClasses: knownClasses,
       classGenerics: classGenerics,
       nonSealed: nonSealed,
+      hidePublicConstructor: hidePublicConstructor,
+      interfaceHidePublicConstructor: interfaceHidePublicConstructor,
     );
   }
 
@@ -121,6 +128,7 @@ class MethodGenerator {
     bool isInterfaceSealed = false,
     List<NameType> classGenerics = const [],
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
   }) {
     return MethodGeneratorFacade.generateAllMethods(
       classFields: classFields,
@@ -136,6 +144,7 @@ class MethodGenerator {
       isInterfaceSealed: isInterfaceSealed,
       classGenerics: classGenerics,
       nonSealed: nonSealed,
+      hidePublicConstructor: hidePublicConstructor,
     );
   }
 
@@ -151,6 +160,7 @@ class MethodGenerator {
     Map<String, bool> interfaceSealedMap = const {},
     List<NameType> classGenerics = const [],
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
   }) {
     return MethodGeneratorFacade.generateMultipleInterfaceMethods(
       classFields: classFields,
@@ -164,6 +174,7 @@ class MethodGenerator {
       interfaceSealedMap: interfaceSealedMap,
       classGenerics: classGenerics,
       nonSealed: nonSealed,
+      hidePublicConstructor: hidePublicConstructor,
     );
   }
 
@@ -173,12 +184,14 @@ class MethodGenerator {
     required String className,
     required List<NameType> classGenerics,
     List<String> knownClasses = const [],
+    bool hidePublicConstructor = false,
   }) {
     return MethodGeneratorFacade.generateClassMethods(
       classFields: classFields,
       className: className,
       classGenerics: classGenerics,
       knownClasses: knownClasses,
+      hidePublicConstructor: hidePublicConstructor,
     );
   }
 

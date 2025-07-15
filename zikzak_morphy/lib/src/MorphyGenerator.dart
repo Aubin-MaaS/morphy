@@ -130,6 +130,9 @@ class MorphyGenerator<TValueT extends MorphyX>
             .toList(),
         comment: e.element.documentationComment,
         isSealed: interfaceName.startsWith("\$\$"),
+        hidePublicConstructor: _getHidePublicConstructorForInterface(
+          e.element as ClassElement,
+        ),
       );
     }).toList();
 
@@ -194,6 +197,9 @@ class MorphyGenerator<TValueT extends MorphyX>
             ).where((x) => x.name != "hashCode").toList(),
             false, // isExplicitSubType
             e.element.name.startsWith("\$\$"), // isSealed
+            _getHidePublicConstructorForInterface(
+              e.element as ClassElement,
+            ), // hidePublicConstructor
           ),
         )
         .union(typesExplicit)
@@ -639,5 +645,19 @@ $imports
 
     // Use the regular fix for other cases
     return _fixSelfReferencingType(type, originalClassName, targetClassName);
+  }
+
+  /// Helper method to get hidePublicConstructor value from an interface element
+  bool _getHidePublicConstructorForInterface(ClassElement interfaceElement) {
+    try {
+      var annotation = typeChecker.firstAnnotationOf(interfaceElement);
+      if (annotation != null) {
+        var reader = ConstantReader(annotation);
+        return reader.read('hidePublicConstructor').boolValue;
+      }
+    } catch (e) {
+      // Interface doesn't have Morphy annotation or doesn't have hidePublicConstructor field
+    }
+    return false;
   }
 }

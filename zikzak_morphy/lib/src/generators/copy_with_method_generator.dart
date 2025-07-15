@@ -12,10 +12,11 @@ class CopyWithMethodGenerator {
     required String interfaceName,
     required String className,
     required bool isClassAbstract,
-    required List<NameType> interfaceGenerics,
+    List<NameType> interfaceGenerics = const [],
     List<NameType> classGenerics = const [],
     List<String> knownClasses = const [],
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
   }) {
     // For nonSealed classes, allow method generation even if interface name starts with $$
     // if it's the class's own interface (cleaned names match)
@@ -49,9 +50,14 @@ class CopyWithMethodGenerator {
           interfaceFields,
         );
 
+    final constructorName = MethodGeneratorCommons.getConstructorName(
+      NameCleaner.clean(className),
+      hidePublicConstructor,
+    );
+
     return '''
       $cleanClassName$typeParams copyWith$cleanInterfaceName(${parameters.isNotEmpty ? '{\n        $parameters\n      }' : ''}) {
-        return $cleanClassName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return $constructorName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 
@@ -61,6 +67,7 @@ class CopyWithMethodGenerator {
     required String className,
     required List<NameType> classGenerics,
     List<String> knownClasses = const [],
+    bool hidePublicConstructor = false,
   }) {
     final cleanClassName = NameCleaner.clean(className);
     final typeParams = TypeResolver.generateTypeParams(
@@ -78,9 +85,14 @@ class CopyWithMethodGenerator {
       classFields,
     );
 
+    final constructorName = MethodGeneratorCommons.getConstructorName(
+      cleanClassName,
+      hidePublicConstructor,
+    );
+
     return '''
       $cleanClassName$typeParams copyWith$cleanClassName(${parameters.isNotEmpty ? '{\n        $parameters\n      }' : ''}) {
-        return $cleanClassName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return $constructorName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 
@@ -106,6 +118,7 @@ class CopyWithMethodGenerator {
     List<NameType> classGenerics = const [],
     List<String> knownClasses = const [],
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
   }) {
     final methods = <String>[];
 
@@ -123,6 +136,7 @@ class CopyWithMethodGenerator {
         classGenerics: classGenerics,
         knownClasses: knownClasses,
         nonSealed: nonSealed,
+        hidePublicConstructor: hidePublicConstructor,
       );
 
       if (method.isNotEmpty) {
@@ -143,6 +157,7 @@ class CopyWithMethodGenerator {
     List<NameType> classGenerics = const [],
     List<String> knownClasses = const [],
     bool nonSealed = false,
+    bool hidePublicConstructor = false,
   }) {
     // For nonSealed classes, allow method generation even if interface name starts with $$
     // if it's the class's own interface (cleaned names match)
@@ -175,9 +190,14 @@ class CopyWithMethodGenerator {
       interfaceFields,
     );
 
+    final constructorName = MethodGeneratorCommons.getConstructorName(
+      NameCleaner.clean(className),
+      hidePublicConstructor,
+    );
+
     return '''
       $cleanClassName$typeParams copyWith${cleanInterfaceName}Fn(${parameters.isNotEmpty ? '{\n        $parameters\n      }' : ''}) {
-        return $cleanClassName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return $constructorName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 

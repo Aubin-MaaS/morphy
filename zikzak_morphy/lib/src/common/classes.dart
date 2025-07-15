@@ -13,6 +13,9 @@ class Interface {
   /// If true the interface is a sealed class (starts with $$)
   final bool isSealed;
 
+  /// If true the interface has hidePublicConstructor: true
+  final bool hidePublicConstructor;
+
   Interface(
     this.interfaceName,
     List<String> genericExtends,
@@ -20,6 +23,7 @@ class Interface {
     this.fields, [
     this.isExplicitSubType = false,
     this.isSealed = false,
+    this.hidePublicConstructor = false,
   ]) : assert(
          genericExtends.length == genericName.length,
          "typeArgs must have same length as typeParams",
@@ -34,6 +38,7 @@ class Interface {
     this.fields, [
     this.isExplicitSubType = false,
     this.isSealed = false,
+    this.hidePublicConstructor = false,
   ]);
 
   toString() =>
@@ -50,7 +55,16 @@ class InterfaceWithComment extends Interface {
     List<NameType> fields, {
     this.comment,
     bool isSealed = false,
-  }) : super(type, typeArgsTypes, typeParamsNames, fields, false, isSealed);
+    bool hidePublicConstructor = false,
+  }) : super(
+         type,
+         typeArgsTypes,
+         typeParamsNames,
+         fields,
+         false,
+         isSealed,
+         hidePublicConstructor,
+       );
 
   toString() =>
       "${this.interfaceName.toString()}|${this.typeParams.toString()}|${this.fields.toString()}";

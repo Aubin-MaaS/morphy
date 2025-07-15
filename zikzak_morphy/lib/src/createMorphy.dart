@@ -205,25 +205,33 @@ String createMorphy(
               .map((e) => NameType(e.name, e.type))
               .toList(),
           nonSealed: nonSealed,
+          hidePublicConstructor: hidePublicConstructor,
         ),
       );
-      // Generate changeTo methods for all interfaces (same as copyWith behavior)
-      sb.writeln(
-        MethodGenerator.generateChangeToMethods(
-          classFields: allFields,
-          interfaceFields: x.fields,
-          interfaceName: x.interfaceName,
-          className: className,
-          isClassAbstract: isAbstract,
-          interfaceGenerics: x.typeParams,
-          knownClasses: knownClasses,
-          isInterfaceSealed: x.isSealed,
-          classGenerics: classGenerics
-              .map((e) => NameType(e.name, e.type))
-              .toList(),
-          nonSealed: nonSealed,
-        ),
-      );
+      // Generate changeTo methods for inherited interfaces (upward conversion: child to parent)
+      // Skip generation for abstract interfaces that can't be instantiated unless it's for non-sealed classes
+      if ((x.interfaceName != classNameTrimmed &&
+              !NameCleaner.isAbstract(x.interfaceName)) ||
+          (nonSealed && NameCleaner.isAbstract(x.interfaceName))) {
+        sb.writeln(
+          MethodGenerator.generateChangeToMethods(
+            classFields: allFields,
+            interfaceFields: x.fields,
+            interfaceName: x.interfaceName,
+            className: className,
+            isClassAbstract: isAbstract,
+            interfaceGenerics: x.typeParams,
+            knownClasses: knownClasses,
+            isInterfaceSealed: x.isSealed,
+            classGenerics: classGenerics
+                .map((e) => NameType(e.name, e.type))
+                .toList(),
+            nonSealed: nonSealed,
+            hidePublicConstructor: hidePublicConstructor,
+            interfaceHidePublicConstructor: x.hidePublicConstructor,
+          ),
+        );
+      }
     });
   }
 
@@ -276,6 +284,8 @@ String createMorphy(
           classGenerics: classGenerics
               .map((e) => NameType(e.name, e.type))
               .toList(),
+          hidePublicConstructor: hidePublicConstructor,
+          interfaceHidePublicConstructor: x.hidePublicConstructor,
         ),
       );
     });
