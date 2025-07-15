@@ -19,6 +19,11 @@ abstract class $$SystemMessage implements $ChatMessage {
   String? get metadata;
 }
 
+@Morphy()
+abstract class $SparkMessage implements $$SystemMessage {
+  String get spark;
+}
+
 void main() {
   group('Non-sealed class method generation', () {
     test('should generate copyWithSystemMessage method', () {

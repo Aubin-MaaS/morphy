@@ -207,25 +207,23 @@ String createMorphy(
           nonSealed: nonSealed,
         ),
       );
-      // Generate changeTo methods for inherited interfaces (upward conversion: child to parent)
-      if (x.interfaceName != classNameTrimmed) {
-        sb.writeln(
-          MethodGenerator.generateChangeToMethods(
-            classFields: allFields,
-            interfaceFields: x.fields,
-            interfaceName: x.interfaceName,
-            className: className,
-            isClassAbstract: isAbstract,
-            interfaceGenerics: x.typeParams,
-            knownClasses: knownClasses,
-            isInterfaceSealed: x.isSealed,
-            classGenerics: classGenerics
-                .map((e) => NameType(e.name, e.type))
-                .toList(),
-            nonSealed: nonSealed,
-          ),
-        );
-      }
+      // Generate changeTo methods for all interfaces (same as copyWith behavior)
+      sb.writeln(
+        MethodGenerator.generateChangeToMethods(
+          classFields: allFields,
+          interfaceFields: x.fields,
+          interfaceName: x.interfaceName,
+          className: className,
+          isClassAbstract: isAbstract,
+          interfaceGenerics: x.typeParams,
+          knownClasses: knownClasses,
+          isInterfaceSealed: x.isSealed,
+          classGenerics: classGenerics
+              .map((e) => NameType(e.name, e.type))
+              .toList(),
+          nonSealed: nonSealed,
+        ),
+      );
     });
   }
 

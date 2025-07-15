@@ -18,15 +18,15 @@ class ChangeToMethodGenerator {
     List<NameType> classGenerics = const [],
     bool nonSealed = false,
   }) {
-    // For nonSealed classes, allow method generation even if interface name starts with $$
-    // if it's the class's own interface (cleaned names match)
+    // For abstract interfaces (starting with $$), check if the interface itself is sealed
+    // Allow generation for nonSealed interfaces (marked with nonSealed: true)
     if (NameCleaner.isAbstract(interfaceName)) {
-      if (!nonSealed ||
+      // If the interface is sealed, skip generation unless it's the class's own interface
+      if (isInterfaceSealed &&
           NameCleaner.clean(interfaceName) != NameCleaner.clean(className)) {
         return '';
       }
     }
-    if (isInterfaceSealed) return '';
 
     final cleanInterfaceName = NameCleaner.clean(interfaceName);
     // Use class generics for type parameters when class is generic
@@ -174,15 +174,15 @@ class ChangeToMethodGenerator {
     List<NameType> classGenerics = const [],
     bool nonSealed = false,
   }) {
-    // For nonSealed classes, allow method generation even if interface name starts with $$
-    // if it's the class's own interface (cleaned names match)
+    // For abstract interfaces (starting with $$), check if the interface itself is sealed
+    // Allow generation for nonSealed interfaces (marked with nonSealed: true)
     if (NameCleaner.isAbstract(interfaceName)) {
-      if (!nonSealed ||
+      // If the interface is sealed, skip generation unless it's the class's own interface
+      if (isInterfaceSealed &&
           NameCleaner.clean(interfaceName) != NameCleaner.clean(className)) {
         return '';
       }
     }
-    if (isInterfaceSealed) return '';
 
     final cleanInterfaceName = NameCleaner.clean(interfaceName);
     final typeParams = TypeResolver.generateTypeParams(interfaceGenerics);
