@@ -26,7 +26,12 @@ TOut? findInTree<TIn, TOut>(
       return fnOutput(item);
 
     if (fnChildren(item).length > 0) {
-      var result = findInTree(fnChildren(item), fnFindCondition, fnOutput, fnChildren);
+      var result = findInTree(
+        fnChildren(item),
+        fnFindCondition,
+        fnOutput,
+        fnChildren,
+      );
       if (result != null) //
         return result;
     }
@@ -70,7 +75,9 @@ List<Map<int, dynamic>> convertTreeToJsonMap<T>(
 
   tree.forEach((w) {
     if (fnChildren(w).length > 0) {
-      newOutput.add({fnId(w): convertTreeToJsonMap(fnChildren(w), fnId, fnChildren)});
+      newOutput.add({
+        fnId(w): convertTreeToJsonMap(fnChildren(w), fnId, fnChildren),
+      });
     } else {
       newOutput.add({fnId(w): null});
     }
@@ -88,7 +95,9 @@ List<Map<TOut, dynamic>> convertTree<TIn, TOut>(
 
   tree.forEach((w) {
     if (fnChildren(w).length > 0) {
-      newOutput.add({fnSelect(w): convertTree(fnChildren(w), fnSelect, fnChildren)});
+      newOutput.add({
+        fnSelect(w): convertTree(fnChildren(w), fnSelect, fnChildren),
+      });
     } else {
       newOutput.add({fnSelect(w): null});
     }
@@ -106,7 +115,9 @@ List<Map<TOut, dynamic>> convertTreeToMap2<TIn, TOut>(
 
   tree.forEach((w) {
     if (fnChildren(w).length > 0) {
-      newOutput.add({fnSelect(w): convertTree(fnChildren(w), fnSelect, fnChildren)});
+      newOutput.add({
+        fnSelect(w): convertTree(fnChildren(w), fnSelect, fnChildren),
+      });
     } else {
       newOutput.add({fnSelect(w): null});
     }

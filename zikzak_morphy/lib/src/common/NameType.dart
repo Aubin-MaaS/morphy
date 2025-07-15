@@ -11,9 +11,12 @@ class NameType {
 class NameTypeClass extends NameType {
   final String? className;
 
-  NameTypeClass(String name, String? type, this.className,
-      {bool isEnum = false})
-      : super(name, type, isEnum: isEnum);
+  NameTypeClass(
+    String name,
+    String? type,
+    this.className, {
+    bool isEnum = false,
+  }) : super(name, type, isEnum: isEnum);
 
   toString() => "${this.name}:${this.type}:${this.className}";
   toStringNameType() => super.toString();
