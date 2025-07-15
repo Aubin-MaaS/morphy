@@ -38,6 +38,12 @@ PACKAGES=(
     "zikzak_morphy"
 )
 
+# List of packages that need dependency updates (includes example)
+DEPENDENCY_UPDATE_PACKAGES=(
+    "zikzak_morphy"
+    "example"
+)
+
 # Update versions in all package pubspec.yaml files
 for pkg in "${PACKAGES[@]}"; do
     echo -e "${BLUE}Updating version in $pkg to $VERSION${NC}"
@@ -81,17 +87,29 @@ convert_path_to_versioned() {
         /^[[:space:]]*path:[[:space:]]*/ d
     }" "$file"
 
-    echo -e "${GREEN}Updated zikzak_morphy_annotation dependency to version ^$version in $file${NC}"
+    # Convert zikzak_morphy path dependency to versioned (for example package)
+    sed -i '' "/^[[:space:]]*zikzak_morphy:[[:space:]]*$/,/^[[:space:]]*[^[:space:]]/ {
+        /^[[:space:]]*zikzak_morphy:[[:space:]]*$/ {
+            c\\
+  zikzak_morphy: ^${version}
+            d
+        }
+        /^[[:space:]]*path:[[:space:]]*/ d
+    }" "$file"
+
+    echo -e "${GREEN}Updated dependencies to version ^$version in $file${NC}"
 }
 
-# Update dependencies in zikzak_morphy to use versioned dependencies instead of path
+# Update dependencies to use versioned dependencies instead of path
 echo -e "${BLUE}Updating dependencies to use versioned references${NC}"
 
-if [ -f "$ROOT_DIR/zikzak_morphy/pubspec.yaml" ]; then
-    convert_path_to_versioned "$ROOT_DIR/zikzak_morphy/pubspec.yaml" "$VERSION"
-else
-    echo -e "${RED}Warning: pubspec.yaml not found in zikzak_morphy. Skipping.${NC}"
-fi
+for pkg in "${DEPENDENCY_UPDATE_PACKAGES[@]}"; do
+    if [ -f "$ROOT_DIR/$pkg/pubspec.yaml" ]; then
+        convert_path_to_versioned "$ROOT_DIR/$pkg/pubspec.yaml" "$VERSION"
+    else
+        echo -e "${RED}Warning: pubspec.yaml not found in $pkg. Skipping.${NC}"
+    fi
+done
 
 # Ask for the commit message
 echo -e "${YELLOW}Enter a commit/changelog message for version $VERSION (default: 'Prepare for publishing version $VERSION'):${NC}"
@@ -154,16 +172,19 @@ done
 echo -e "${BLUE}\n=== Verifying no path dependencies remain ===${NC}"
 found_path_deps=false
 
-if [ -f "$ROOT_DIR/zikzak_morphy/pubspec.yaml" ]; then
-    if grep -q "path:" "$ROOT_DIR/zikzak_morphy/pubspec.yaml"; then
-        echo -e "${RED}Warning: Path dependencies still found in zikzak_morphy/pubspec.yaml${NC}"
-        echo -e "${YELLOW}Remaining path dependencies:${NC}"
-        grep -A1 -B1 "path:" "$ROOT_DIR/zikzak_morphy/pubspec.yaml"
-        found_path_deps=true
-    else
-        echo -e "${GREEN}✓ No path dependencies in zikzak_morphy${NC}"
+for pkg in "${DEPENDENCY_UPDATE_PACKAGES[@]}"; do
+    if [ -f "$ROOT_DIR/$pkg/pubspec.yaml" ]; then
+        # Look for actual local path dependencies (starting with ../ or ./)
+        if grep -q "path:.*\.\." "$ROOT_DIR/$pkg/pubspec.yaml"; then
+            echo -e "${RED}Warning: Path dependencies still found in $pkg/pubspec.yaml${NC}"
+            echo -e "${YELLOW}Remaining path dependencies:${NC}"
+            grep -A1 -B1 "path:.*\.\." "$ROOT_DIR/$pkg/pubspec.yaml"
+            found_path_deps=true
+        else
+            echo -e "${GREEN}✓ No local path dependencies in $pkg${NC}"
+        fi
     fi
-fi
+done
 
 if [ "$found_path_deps" = true ]; then
     echo -e "\n${RED}⚠️  Some packages still have path dependencies. Please review and fix manually.${NC}"
