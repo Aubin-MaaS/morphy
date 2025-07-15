@@ -1,3 +1,8 @@
+## 2.3.0 - 2025-07-15
+
+* non-sealed classes fixed
+* Updated dependencies to use hosted references
+
 # Changelog
 
 ## [2.2.0] - 2025-07-15
