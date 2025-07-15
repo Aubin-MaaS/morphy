@@ -1,3 +1,8 @@
+## 2.4.0 - 2025-07-15
+
+* Fixed classes implementing non-sealed class missing changeTo method
+* Updated dependencies to use hosted references
+
 ## 2.3.0 - 2025-07-15
 
 * non-sealed classes fixed
