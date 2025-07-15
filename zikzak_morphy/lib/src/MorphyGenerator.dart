@@ -563,6 +563,7 @@ $imports
 
           // Transform $ClassName to ClassName
           body = body.replaceAll(RegExp(r'\$(\w+)'), r'\1');
+
           return 'return ' + body + ';';
         }
       }

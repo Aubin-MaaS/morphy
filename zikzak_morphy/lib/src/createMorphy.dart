@@ -39,6 +39,7 @@ String createMorphy(
         hidePublicConstructor,
         explicitToJson,
         generateCompareTo,
+        isAbstract,
       ),
     );
   }
@@ -242,13 +243,21 @@ String createMorphy(
     sb.writeln(commentEveryLine(interfacesX.map((e) => e.toString()).join()));
     sb.writeln(commentEveryLine(explicitForJson.join("\n").toString()));
     sb.writeln(generateFromJsonHeader(className));
-    sb.writeln(generateFromJsonBody(className, classGenerics, explicitForJson));
-    sb.writeln(generateToJson(className, classGenerics));
-    sb.writeln(generateToJsonLean(className));
+    sb.writeln(
+      generateFromJsonBody(
+        className,
+        classGenerics,
+        explicitForJson,
+        isAbstract,
+      ),
+    );
+    sb.writeln(generateToJson(className, classGenerics, isAbstract));
+    sb.writeln(generateToJsonLean(className, isAbstract));
   }
   sb.writeln("}");
   if ((!isAbstract || (isAbstract && nonSealed)) &&
-      !className.startsWith('\$\$') &&
+      (!className.startsWith('\$\$') ||
+          (className.startsWith('\$\$') && !isAbstract)) &&
       generateCompareTo) {
     // Create a list of all known classes from the interfaces
 

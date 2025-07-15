@@ -585,10 +585,12 @@ String createJsonHeader(
   bool privateConstructor,
   bool explicitToJson,
   bool generateCompareTo,
+  bool isAbstract,
 ) {
   var sb = StringBuffer();
 
-  if (!className.startsWith("\$\$")) {
+  if (!className.startsWith("\$\$") ||
+      (className.startsWith("\$\$") && !isAbstract)) {
     var jsonConstructorName = privateConstructor
         ? "constructor: 'forJsonDoNotUse'"
         : "";
@@ -763,20 +765,24 @@ String getConstructorName(String trimmedClassName, bool hasCustomConstructor) {
 }
 
 String generateFromJsonHeader(String className) {
-  var _className = "${className.replaceFirst("\$", "")}";
-  return "factory ${_className.replaceFirst("\$", "")}.fromJson(Map<String, dynamic> json) {";
+  var _className = "${className.replaceAll("\$", "")}";
+  return "factory ${_className}.fromJson(Map<String, dynamic> json) {";
 }
 
 String generateFromJsonBody(
   String className,
   List<NameType> generics,
   List<Interface> interfaces,
+  bool isAbstract,
 ) {
   var _class = Interface(
     className,
     generics.map((e) => e.type ?? "").toList(),
     generics.map((e) => e.name).toList(),
     [],
+    false, // isExplicitSubType
+    className.startsWith("\$\$") &&
+        isAbstract, // isSealed - only true for truly sealed classes
   );
   var _classes = [...interfaces, _class];
   var _className = className.replaceAll("\$", "");
@@ -787,11 +793,11 @@ String generateFromJsonBody(
     }
 """;
 
-  // Add interface checks
+  // Add interface checks - exclude truly sealed abstract classes but include non-sealed classes with $$
   var interfaceChecks = _classes
-      .where((c) => !c.interfaceName.startsWith("\$\$"))
+      .where((c) => !c.isSealed)
       .mapIndexed((i, c) {
-        var _interfaceName = "${c.interfaceName.replaceFirst("\$", "")}";
+        var _interfaceName = "${c.interfaceName.replaceAll("\$", "")}";
         var genericTypes = c.typeParams.map((e) => "'_${e.name}_'").join(",");
         var isCurrentClass = _interfaceName == className.replaceAll("\$", "");
         var prefix = i == 0 ? "if" : "} else if";
@@ -822,12 +828,16 @@ String generateFromJsonBody(
   return body;
 }
 
-String generateToJson(String className, List<NameType> generics) {
-  if (className.startsWith("\$\$")) {
+String generateToJson(
+  String className,
+  List<NameType> generics,
+  bool isAbstract,
+) {
+  if (className.startsWith("\$\$") && isAbstract) {
     return "Map<String, dynamic> toJsonCustom([Map<Type, Object? Function(Never)>? fns]);";
   }
 
-  var _className = "${className.replaceFirst("\$", "")}";
+  var _className = "${className.replaceAll("\$", "")}";
 
   var getGenericFn = generics.isEmpty
       ? ""
@@ -874,12 +884,12 @@ $getGenericFn    final Map<String, dynamic> data = _\$${_className}ToJson(this${
   return result;
 }
 
-String generateToJsonLean(String className) {
-  if (className.startsWith("\$\$")) {
+String generateToJsonLean(String className, bool isAbstract) {
+  if (className.startsWith("\$\$") && isAbstract) {
     return "";
   }
 
-  var _className = "${className.replaceFirst("\$", "")}";
+  var _className = "${className.replaceAll("\$", "")}";
   var result =
       """
 
