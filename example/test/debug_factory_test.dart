@@ -9,6 +9,12 @@ part 'debug_factory_test.g.dart';
 abstract class $$SimpleResponse {
   String get message;
   String get status;
+
+  factory $$SimpleResponse.success(String message) =>
+      SimpleResponse._(message: message, status: "success");
+
+  factory $$SimpleResponse.error(String error) =>
+      SimpleResponse._(message: error, status: "error");
 }
 
 @Morphy(generateJson: true)
@@ -34,6 +40,16 @@ void main() {
 
       expect(response.message, "test message");
       expect(response.status, "success");
+    });
+
+    test('should create SimpleResponse with factory methods', () {
+      var successResponse = SimpleResponse.success("Operation completed");
+      expect(successResponse.message, "Operation completed");
+      expect(successResponse.status, "success");
+
+      var errorResponse = SimpleResponse.error("Something went wrong");
+      expect(errorResponse.message, "Something went wrong");
+      expect(errorResponse.status, "error");
     });
 
     test(

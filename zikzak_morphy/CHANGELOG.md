@@ -1,3 +1,8 @@
+## 2.6.0 - 2025-07-15
+
+* fixed: non sealed abstract classes was not generating json when generateJson was set true
+* Updated dependencies to use hosted references
+
 ## 2.5.0 - 2025-07-15
 
 * fixed: changeTo is now not generated for classes inherited that are public constructors hidden
