@@ -1,3 +1,8 @@
+## 2.5.0 - 2025-07-15
+
+* fixed: changeTo is now not generated for classes inherited that are public constructors hidden
+* Updated dependencies to use hosted references
+
 ## 2.4.0 - 2025-07-15
 
 * Fixed classes implementing non-sealed class missing changeTo method
