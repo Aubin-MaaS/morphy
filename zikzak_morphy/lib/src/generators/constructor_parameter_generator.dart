@@ -61,19 +61,7 @@ class ConstructorParameterGenerator {
           return '''$name: (_patchMap[$targetClassName\$.$name] is $patchType)
             ? (this.${f.name}?.patchWith$baseType(
                 patchInput: _patchMap[$targetClassName\$.$name]
-              ) ?? (() {
-                try {
-                  return $baseType.fromJson(
-                    (_patchMap[$targetClassName\$.$name] as $patchType).toJson()
-                  );
-                } catch (e) {
-                  throw StateError(
-                    'Failed to create new $baseType instance from patch. '
-                    'The field "$name" is null and the patch does not contain all required fields. '
-                    'Error: \${e.toString()}'
-                  );
-                }
-              })())
+              ) ?? _patchMap[$targetClassName\$.$name])
             : _patchMap.containsKey($targetClassName\$.$name) ? _patchMap[$targetClassName\$.$name] : this.${f.name}''';
         }
         return '$name: _patchMap.containsKey($targetClassName\$.$name) ? _patchMap[$targetClassName\$.$name] : this.${f.name}';
@@ -119,19 +107,7 @@ class ConstructorParameterGenerator {
           return '''$name: (_patchMap[$targetClassName\$.$name] is $patchType)
             ? (this.${f.name}?.patchWith$baseType(
                 patchInput: _patchMap[$targetClassName\$.$name]
-              ) ?? (() {
-                try {
-                  return $baseType.fromJson(
-                    (_patchMap[$targetClassName\$.$name] as $patchType).toJson()
-                  );
-                } catch (e) {
-                  throw StateError(
-                    'Failed to create new $baseType instance from patch. '
-                    'The field "$name" is null and the patch does not contain all required fields. '
-                    'Error: \${e.toString()}'
-                  );
-                }
-              })())
+              ) ?? _patchMap[$targetClassName\$.$name])
             : _patchMap[$targetClassName\$.$name] ?? this.${f.name}''';
         }
         return '$name: _patchMap[$targetClassName\$.$name] ?? this.${f.name}';

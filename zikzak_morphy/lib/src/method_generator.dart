@@ -84,8 +84,8 @@ class MethodGenerator {
       className: className,
       isClassAbstract: isClassAbstract,
       interfaceGenerics: interfaceGenerics,
-      knownClasses: knownClasses,
       isInterfaceSealed: isInterfaceSealed,
+      knownClasses: knownClasses,
       classGenerics: classGenerics,
       nonSealed: nonSealed,
     );

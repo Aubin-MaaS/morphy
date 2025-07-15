@@ -198,8 +198,8 @@ class ChangeToMethodGenerator {
 
     final constructorParams =
         ConstructorParameterGenerator.generateChangeToConstructorParams(
-          interfaceFields,
           classFields,
+          interfaceFields,
           cleanInterfaceName,
           interfaceGenerics,
           knownClasses,

@@ -140,6 +140,7 @@ class MethodGeneratorFacade {
       knownClasses: knownClasses,
       isInterfaceSealed: isInterfaceSealed,
       classGenerics: classGenerics,
+      nonSealed: nonSealed,
     );
 
     if (changeToMethod.isNotEmpty) {
