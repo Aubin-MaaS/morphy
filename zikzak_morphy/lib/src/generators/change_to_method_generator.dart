@@ -291,7 +291,7 @@ class ChangeToMethodGenerator {
 
       if (isPreserved) {
         // Preserve current value for this field
-        return '$name: this.$name';
+        return '$name: this.${f.name}';
       } else {
         // Use patch value for changeable fields
         final baseType = FieldTypeAnalyzer.cleanType(
@@ -311,7 +311,7 @@ class ChangeToMethodGenerator {
         )) {
           final patchType = MethodGeneratorCommons.getPatchType(baseType);
           return '''$name: (_patchMap[$targetClassName\$.$name] is $patchType)
-            ? (this.$name?.copyWith$baseType(
+            ? (this.${f.name}?.copyWith$baseType(
                 patchInput: _patchMap[$targetClassName\$.$name]
               ) ?? (() {
                 try {
@@ -326,7 +326,7 @@ class ChangeToMethodGenerator {
                   );
                 }
               })())
-            : _patchMap[$targetClassName\$.$name]''';
+            : _patchMap[$targetClassName\$.$name] ?? this.${f.name}''';
         }
         return '$name: _patchMap[$targetClassName\$.$name]';
       }

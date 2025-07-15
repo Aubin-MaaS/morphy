@@ -90,7 +90,7 @@ class CopyWithMethodGenerator {
   ) {
     final constructorFields = classFields.map((f) {
       final name = MethodGeneratorCommons.getCleanFieldName(f.name);
-      return '$name: $name ?? this.$name';
+      return '$name: $name ?? this.${f.name}';
     });
 
     return constructorFields.join(',\n          ');
@@ -194,10 +194,10 @@ class CopyWithMethodGenerator {
 
       if (hasField) {
         // For interface fields, call function or use current value
-        return '$name: $name != null ? $name() : this.$name';
+        return '$name: $name != null ? $name() : this.${f.name}';
       } else {
         // For class-only fields, keep current value
-        return '$name: this.$name';
+        return '$name: this.${f.name}';
       }
     });
 

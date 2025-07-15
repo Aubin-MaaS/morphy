@@ -18,10 +18,10 @@ class ConstructorParameterGenerator {
         // For interface fields, use parameter or current value with cast if needed
         final cleanType = FieldTypeAnalyzer.cleanType(f.type);
         final castType = cleanType.endsWith('?') ? cleanType : '$cleanType?';
-        return '$name: $name as $castType ?? this.$name';
+        return '$name: $name as $castType ?? this.${f.name}';
       } else {
         // For class-only fields, keep current value
-        return '$name: this.$name';
+        return '$name: this.${f.name}';
       }
     });
 
@@ -59,7 +59,7 @@ class ConstructorParameterGenerator {
         )) {
           final patchType = MethodGeneratorCommons.getPatchType(baseType);
           return '''$name: (_patchMap[$targetClassName\$.$name] is $patchType)
-            ? (this.$name?.patchWith$baseType(
+            ? (this.${f.name}?.patchWith$baseType(
                 patchInput: _patchMap[$targetClassName\$.$name]
               ) ?? (() {
                 try {
@@ -74,12 +74,12 @@ class ConstructorParameterGenerator {
                   );
                 }
               })())
-            : _patchMap.containsKey($targetClassName\$.$name) ? _patchMap[$targetClassName\$.$name] : this.$name''';
+            : _patchMap.containsKey($targetClassName\$.$name) ? _patchMap[$targetClassName\$.$name] : this.${f.name}''';
         }
-        return '$name: _patchMap.containsKey($targetClassName\$.$name) ? _patchMap[$targetClassName\$.$name] : this.$name';
+        return '$name: _patchMap.containsKey($targetClassName\$.$name) ? _patchMap[$targetClassName\$.$name] : this.${f.name}';
       } else {
         // For class-only fields, keep current value
-        return '$name: this.$name';
+        return '$name: this.${f.name}';
       }
     });
 
@@ -117,7 +117,7 @@ class ConstructorParameterGenerator {
         )) {
           final patchType = MethodGeneratorCommons.getPatchType(baseType);
           return '''$name: (_patchMap[$targetClassName\$.$name] is $patchType)
-            ? (this.$name?.patchWith$baseType(
+            ? (this.${f.name}?.patchWith$baseType(
                 patchInput: _patchMap[$targetClassName\$.$name]
               ) ?? (() {
                 try {
@@ -132,9 +132,9 @@ class ConstructorParameterGenerator {
                   );
                 }
               })())
-            : _patchMap[$targetClassName\$.$name]''';
+            : _patchMap[$targetClassName\$.$name] ?? this.${f.name}''';
         }
-        return '$name: _patchMap[$targetClassName\$.$name] ?? this.$name';
+        return '$name: _patchMap[$targetClassName\$.$name] ?? this.${f.name}';
       } else {
         // For fields that don't exist in source class, use only patch values
         return '$name: _patchMap[$targetClassName\$.$name]';
@@ -158,9 +158,9 @@ class ConstructorParameterGenerator {
       final hasField = sourceFieldNames.contains(f.name);
 
       if (hasField) {
-        return '$name: $parameterPrefix$name ?? this.$name';
+        return '$name: $parameterPrefix$name ?? this.${f.name}';
       } else {
-        return '$name: this.$name';
+        return '$name: this.${f.name}';
       }
     });
 

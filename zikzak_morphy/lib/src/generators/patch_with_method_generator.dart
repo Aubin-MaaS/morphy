@@ -90,7 +90,7 @@ class PatchWithMethodGenerator {
   ) {
     final constructorFields = classFields.map((f) {
       final name = MethodGeneratorCommons.getCleanFieldName(f.name);
-      return '$name: _patchMap.containsKey($className\$.$name) ? _patchMap[$className\$.$name] : this.$name';
+      return '$name: _patchMap.containsKey($className\$.$name) ? _patchMap[$className\$.$name] : this.${f.name}';
     });
 
     return constructorFields.join(',\n          ');
