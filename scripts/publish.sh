@@ -77,6 +77,7 @@ check_dependencies() {
                 return 1
             fi
         fi
+        sleep 30
     done
 
     echo -e "${GREEN}All dependencies for $package_dir are available on pub.dev!${NC}"
