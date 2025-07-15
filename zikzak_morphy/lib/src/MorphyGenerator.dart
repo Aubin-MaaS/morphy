@@ -568,7 +568,7 @@ $imports
     var paramList = constructor.parameters
         .map((p) => '${p.name}: ${p.name}')
         .join(', ');
-    return 'return ${className}._(${paramList});';
+    return 'return ${className}(${paramList});';
   }
 
   String _fixSelfReferencingType(

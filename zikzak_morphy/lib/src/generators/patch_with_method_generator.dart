@@ -43,7 +43,7 @@ class PatchWithMethodGenerator {
       }) {
         final _patcher = patchInput ?? ${cleanInterfaceName}Patch();
         final _patchMap = _patcher.toPatch();
-        return $cleanClassName._(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return $cleanClassName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 
@@ -71,7 +71,7 @@ class PatchWithMethodGenerator {
       }) {
         final _patcher = patchInput ?? ${cleanClassName}Patch();
         final _patchMap = _patcher.toPatch();
-        return $cleanClassName._(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return $cleanClassName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 
@@ -173,7 +173,7 @@ class PatchWithMethodGenerator {
         final _patcher = patchInput ?? ${cleanInterfaceName}Patch();
         $patchAssignments
         final _patchMap = _patcher.toPatch();
-        return $cleanClassName._(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return $cleanClassName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 
@@ -225,7 +225,7 @@ class PatchWithMethodGenerator {
         final _patcher = patchInput ?? ${cleanInterfaceName}Patch();
         $patchAssignments
         final _patchMap = _patcher.toPatch();
-        return $cleanClassName._(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return $cleanClassName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 

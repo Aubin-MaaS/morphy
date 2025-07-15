@@ -43,7 +43,7 @@ class CopyWithMethodGenerator {
 
     return '''
       $cleanClassName$typeParams copyWith$cleanInterfaceName(${parameters.isNotEmpty ? '{\n        $parameters\n      }' : ''}) {
-        return $cleanClassName._(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return $cleanClassName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 
@@ -72,7 +72,7 @@ class CopyWithMethodGenerator {
 
     return '''
       $cleanClassName$typeParams copyWith$cleanClassName(${parameters.isNotEmpty ? '{\n        $parameters\n      }' : ''}) {
-        return $cleanClassName._(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return $cleanClassName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 
@@ -159,7 +159,7 @@ class CopyWithMethodGenerator {
 
     return '''
       $cleanClassName$typeParams copyWith${cleanInterfaceName}Fn(${parameters.isNotEmpty ? '{\n        $parameters\n      }' : ''}) {
-        return $cleanClassName._(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
+        return $cleanClassName(${constructorParams.isNotEmpty ? '\n          $constructorParams\n        ' : ''});
       }''';
   }
 

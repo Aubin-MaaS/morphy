@@ -29,7 +29,7 @@ class GenericMethodGenerator {
         final _patcher = patchInput ?? ${className}Patch();
         ${_generatePatchAssignments(fields)}
         final _patchMap = _patcher.toPatch();
-        return $className<${cleanTypeParams.join(', ')}>._(
+        return $className<${cleanTypeParams.join(', ')}>(
           ${_generateConstructorParams(fields, className)}
         );
       }

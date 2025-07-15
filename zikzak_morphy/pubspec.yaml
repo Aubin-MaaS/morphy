@@ -13,7 +13,8 @@ environment:
 #       path: morphy_annotation
 #       ref: git-ref
 dependencies:
-  zikzak_morphy_annotation: ^2.0.0
+  zikzak_morphy_annotation:
+    path: ../zikzak_morphy_annotation
   analyzer: ^7.5.7
   build: ^2.5.4
   source_gen: ^2.0.0
