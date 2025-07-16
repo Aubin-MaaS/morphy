@@ -1,7 +1,7 @@
 // ignore_for_file: unnecessary_cast
 // ignore_for_file: unused_element
 
-import 'package:morphy_annotation/morphy_annotation.dart';
+import 'package:zikzak_morphy_annotation/morphy_annotation.dart';
 import 'package:test/test.dart';
 
 part 'ex57_change_to_parent_test.morphy.dart';
@@ -14,13 +14,9 @@ main() {
       C(id: "3", xyz: "my custom"),
     ];
 
-    var result = aList.map((e) => e.changeTo_A()).toList();
+    var result = aList.map((e) => e.changeToA()).toList();
 
-    final expected = [
-      A(id: "1"),
-      A(id: "2"),
-      A(id: "3"),
-    ];
+    final expected = [A(id: "1"), A(id: "2"), A(id: "3")];
 
     expect(result, expected);
   });

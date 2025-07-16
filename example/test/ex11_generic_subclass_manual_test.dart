@@ -1,13 +1,14 @@
-import 'package:morphy_annotation/morphy_annotation.dart';
+import 'package:zikzak_morphy_annotation/morphy_annotation.dart';
 import 'package:test/test.dart';
 
 // ignore_for_file: UNNECESSARY_CAST
 
 abstract class A<T1, T2> {
   T1 get x;
+
   T2 get y;
 
-  A copyWith_A<T1, T2>({
+  A<T1, T2> copyWith_A<T1, T2>({
     Opt<T1>? x,
     Opt<T2>? y,
   });
@@ -26,7 +27,7 @@ class B implements A<int, String> {
 
   String toString() => "(B-x:$x|y:$y|z:$z)";
 
-  B copyWith_A<T1, T2>({
+  A<T1, T2> copyWith_A<T1, T2>({
     Opt<T1>? x,
     Opt<T2>? y,
   }) {
@@ -34,7 +35,7 @@ class B implements A<int, String> {
       x: x == null ? this.x as int : x.value as int,
       y: y == null ? this.y as String : y.value as String,
       z: (this as B).z,
-    );
+    ) as A<T1, T2>;
   }
 
   B copyWith_B({

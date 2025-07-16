@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:morphy_annotation/morphy_annotation.dart';
+import 'package:zikzak_morphy_annotation/morphy_annotation.dart';
 
 part 'ex31_constant_constructor_test.morphy.dart';
 
@@ -13,9 +13,7 @@ abstract class $A {
 }
 
 class MyStaticClass {
-  static const concepts2 = <A>[
-    A.constant(a: 5),
-  ];
+  static const concepts2 = <A>[A.constant(a: 5)];
 }
 
 main() {
@@ -25,7 +23,7 @@ main() {
     expect(a.a, 1);
 
     //you can't change a constant object but you can copy and then change one
-    var copya = a.copyWith_A();
+    var copya = a.copyWithA();
 
     expect(copya.a, 1);
   });

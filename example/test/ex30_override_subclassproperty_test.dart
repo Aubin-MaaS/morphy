@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:morphy_annotation/morphy_annotation.dart';
+import 'package:zikzak_morphy_annotation/morphy_annotation.dart';
 
 part 'ex30_override_subclassproperty_test.morphy.dart';
 
@@ -17,12 +17,12 @@ class Employee implements Person {
   Employee(this.name, this.id);
 }
 
-@morphy
+@Morphy(explicitToJson: false)
 abstract class $A {
   Person get a;
 }
 
-@morphy
+@Morphy(explicitToJson: false)
 abstract class $B implements $A {
   Employee get a;
 }

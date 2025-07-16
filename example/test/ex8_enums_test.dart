@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:morphy_annotation/morphy_annotation.dart';
+import 'package:zikzak_morphy_annotation/morphy_annotation.dart';
 
 part 'ex8_enums_test.g.dart';
 part 'ex8_enums_test.morphy.dart';
@@ -25,7 +25,7 @@ main() {
   test("1 toJson as A", () {
     var pet = Pet(type: "cat", blim: eBlim.one);
 
-    var result = pet.toJson_2({});
+    var result = pet.toJson();
 
     var expected = {'type': 'cat', 'blim': 'one', '_className_': 'Pet'};
 

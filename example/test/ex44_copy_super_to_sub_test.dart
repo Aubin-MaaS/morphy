@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:morphy_annotation/morphy_annotation.dart';
+import 'package:zikzak_morphy_annotation/morphy_annotation.dart';
 
 part 'ex44_copy_super_to_sub_test.morphy.dart';
 
@@ -27,7 +27,7 @@ abstract class $Sub implements $Super {
 main() {
   test("1", () {
     var _super = Super(id: "id");
-    var result = _super.changeTo_Sub(description: "description");
+    var result = _super.changeToSub(description: "description");
     expect(result is Sub, true);
   });
 }

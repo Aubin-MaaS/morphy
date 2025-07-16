@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:morphy_annotation/morphy_annotation.dart';
+import 'package:zikzak_morphy_annotation/morphy_annotation.dart';
 
 // COPYTO FROM SUB CLASS TO A SIBLING SUB CLASS
 
@@ -28,7 +28,7 @@ abstract class $SubB implements $$Super {
 main() {
   test("subA to subB (sub sibling to sub)", () {
     SubA subA = SubA(x: "x");
-    SubB subB = subA.changeTo_SubB(z: "z");
+    SubB subB = subA.changeToSubB(z: "z");
 
     expect(subB.toString(), "(SubB-z:z|x:x)");
   });

@@ -1,4 +1,4 @@
-import 'package:morphy_annotation/morphy_annotation.dart';
+import 'package:zikzak_morphy_annotation/morphy_annotation.dart';
 import 'package:test/test.dart';
 
 part 'ex55_sealed_class_test.morphy.dart';
@@ -30,12 +30,13 @@ abstract class $Todo2_complete_assigned implements $Todo2_complete {
   String get managerId;
 }
 
-String getDescription(Todo2 todo) =>
-    switch (todo) {
-      Todo2_incomplete() => "incomplete",
-      Todo2_complete_assigned(managerId: var managerId) => "assigned to: $managerId",
-      Todo2_complete(completedDate: var completedDate) => "completed on $completedDate",
-    };
+String getDescription(Todo2 todo) => switch (todo) {
+  Todo2_incomplete() => "incomplete",
+  Todo2_complete_assigned(managerId: var managerId) =>
+    "assigned to: $managerId",
+  Todo2_complete(completedDate: var completedDate) =>
+    "completed on $completedDate",
+};
 
 void main() {
   group("sealed", () {

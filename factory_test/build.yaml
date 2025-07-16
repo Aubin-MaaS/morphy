@@ -1,0 +1,8 @@
+targets:
+  $default:
+    builders:
+      zikzak_morphy|morphy:
+        enabled: true
+        generate_for:
+          - test/**
+          - lib/**

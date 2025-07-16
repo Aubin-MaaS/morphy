@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:morphy_annotation/morphy_annotation.dart';
+import 'package:zikzak_morphy_annotation/morphy_annotation.dart';
 
 // ignore_for_file: unnecessary_type_check
 
@@ -19,7 +19,7 @@ abstract class $Sub<T> implements $Super {
 main() {
   test("1", () {
     var _super = Super(id: "id");
-    var result = _super.changeTo_Sub<int>(description: "description", code: 5);
+    var result = _super.changeToSub(description: "description", code: 5);
     expect(result is Sub, true);
   });
 }
