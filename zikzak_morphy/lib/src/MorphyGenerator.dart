@@ -224,6 +224,7 @@ class MorphyGenerator<TValueT extends MorphyX>
         annotation.read('generateCompareTo').boolValue,
         annotation.read('generateCopyWithFn').boolValue,
         factoryMethods,
+        _allAnnotatedClasses,
       ),
     );
 

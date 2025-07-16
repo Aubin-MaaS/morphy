@@ -28,6 +28,8 @@ dev_dependencies:
 - **JSON serialization/deserialization** with automatic handling
 - **Automatic toString and equality** implementations
 - **Patch-based updates** for complex object modifications
+- **Nested patch operations** for deep updates in object hierarchies
+- **Collection patching** for Lists and Maps containing Morphy objects
 - **changeTo methods** for type transformations between related classes
 - **Multiple inheritance** support for interfaces
 - **Generic type** handling
@@ -81,6 +83,12 @@ final emailUser = User.withEmail(
 // Type-safe copyWith
 final updatedUser = user.copyWithUser(age: () => 31);
 
+// Patch-based updates for complex modifications
+final userPatch = UserPatch.create()
+  ..withName('John Updated')
+  ..withAge(31);
+final patchedUser = userPatch.applyTo(user);
+
 // JSON serialization (when generateJson: true)
 final json = user.toJson();
 final fromJson = User.fromJson(json);
@@ -89,6 +97,48 @@ final fromJson = User.fromJson(json);
 print(user); // (User-name:John|age:30|email:null)
 print(user == updatedUser); // false
 ```
+
+## Nested Patch Operations
+
+For complex object hierarchies, Morphy now supports deep patching of nested objects and collections:
+
+```dart
+@Morphy()
+abstract class $Profile {
+  String get name;
+  int get age;
+}
+
+@Morphy()
+abstract class $User {
+  String get email;
+  $Profile get profile;
+  List<$Address> get addresses;
+  Map<String, $Contact> get contacts;
+}
+
+// Deep nested patching with function-based approach
+final userPatch = UserPatch.create()
+  ..withEmail('new@example.com')
+  ..withProfilePatchFunc((patch) => patch
+    ..withName('Updated Name')
+    ..withAge(35))
+  ..updateAddressesAt(0, (patch) => patch
+    ..withStreet('New Street'))
+  ..updateContactsValue('work', (patch) => patch
+    ..withPhone('555-0123'));
+
+final updatedUser = userPatch.applyTo(originalUser);
+```
+
+### Patch Methods Generated
+
+For nested Morphy objects, the following methods are automatically generated:
+
+- `withFieldPatch(FieldPatch value)` - Direct patch application
+- `withFieldPatchFunc(FieldPatch Function(FieldPatch) updater)` - Function-based patching
+- `updateListFieldAt(int index, ItemPatch Function(ItemPatch) updater)` - List item patching
+- `updateMapFieldValue(KeyType key, ValuePatch Function(ValuePatch) updater)` - Map value patching
 
 ## Advanced Features
 

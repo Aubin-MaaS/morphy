@@ -58,13 +58,21 @@ class ConstructorParameterGenerator {
           knownClasses,
         )) {
           final patchType = MethodGeneratorCommons.getPatchType(baseType);
-          return '''$name: (_patchMap[$targetClassName\$.$name] is $patchType)
-            ? (this.${f.name}?.patchWith$baseType(
-                patchInput: _patchMap[$targetClassName\$.$name]
-              ) ?? _patchMap[$targetClassName\$.$name])
-            : _patchMap.containsKey($targetClassName\$.$name) ? _patchMap[$targetClassName\$.$name] : this.${f.name}''';
+          return '''$name: _patchMap.containsKey($targetClassName\$.$name)
+            ? (_patchMap[$targetClassName\$.$name] is Function)
+              ? _patchMap[$targetClassName\$.$name](this.${f.name})
+              : (_patchMap[$targetClassName\$.$name] is $patchType)
+                ? (this.${f.name}?.patchWith$baseType(
+                    patchInput: _patchMap[$targetClassName\$.$name]
+                  ) ?? _patchMap[$targetClassName\$.$name])
+                : _patchMap[$targetClassName\$.$name]
+            : this.${f.name}''';
         }
-        return '$name: _patchMap.containsKey($targetClassName\$.$name) ? _patchMap[$targetClassName\$.$name] : this.${f.name}';
+        return '''$name: _patchMap.containsKey($targetClassName\$.$name)
+          ? (_patchMap[$targetClassName\$.$name] is Function)
+            ? _patchMap[$targetClassName\$.$name](this.${f.name})
+            : _patchMap[$targetClassName\$.$name]
+          : this.${f.name}''';
       } else {
         // For class-only fields, keep current value
         return '$name: this.${f.name}';
@@ -104,13 +112,21 @@ class ConstructorParameterGenerator {
           knownClasses,
         )) {
           final patchType = MethodGeneratorCommons.getPatchType(baseType);
-          return '''$name: (_patchMap[$targetClassName\$.$name] is $patchType)
-            ? (this.${f.name}?.patchWith$baseType(
-                patchInput: _patchMap[$targetClassName\$.$name]
-              ) ?? _patchMap[$targetClassName\$.$name])
-            : _patchMap[$targetClassName\$.$name] ?? this.${f.name}''';
+          return '''$name: _patchMap.containsKey($targetClassName\$.$name)
+            ? (_patchMap[$targetClassName\$.$name] is Function)
+              ? _patchMap[$targetClassName\$.$name](this.${f.name})
+              : (_patchMap[$targetClassName\$.$name] is $patchType)
+                ? (this.${f.name}?.patchWith$baseType(
+                    patchInput: _patchMap[$targetClassName\$.$name]
+                  ) ?? _patchMap[$targetClassName\$.$name])
+                : _patchMap[$targetClassName\$.$name]
+            : this.${f.name}''';
         }
-        return '$name: _patchMap[$targetClassName\$.$name] ?? this.${f.name}';
+        return '''$name: _patchMap.containsKey($targetClassName\$.$name)
+          ? (_patchMap[$targetClassName\$.$name] is Function)
+            ? _patchMap[$targetClassName\$.$name](this.${f.name})
+            : _patchMap[$targetClassName\$.$name]
+          : this.${f.name}''';
       } else {
         // For fields that don't exist in source class, use only patch values
         return '$name: _patchMap[$targetClassName\$.$name]';

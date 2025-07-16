@@ -6,6 +6,15 @@ import 'package:zikzak_morphy/src/common/classes.dart';
 import 'method_generator.dart';
 
 // import 'package:meta/meta.dart';
+
+// String extension for capitalize functionality
+extension StringExtension on String {
+  String capitalize() {
+    if (isEmpty) return this;
+    return '${this[0].toUpperCase()}${substring(1)}';
+  }
+}
+
 const List<String> PRIMITIVE_TYPES = [
   'String',
   'DateTime',
@@ -404,6 +413,7 @@ String getPatchClass(
     var patchType = getPatchType(field.type ?? "dynamic");
     var cleanPatchBaseType = baseType.replaceAll("?", "");
     var isPatchGenericType = genericTypeNames.contains(cleanPatchBaseType);
+
     if (!PRIMITIVE_TYPES.any(
           (primitiveType) => cleanPatchBaseType.startsWith(primitiveType),
         ) &&
@@ -417,6 +427,84 @@ String getPatchClass(
       sb.writeln("    return this;");
       sb.writeln("  }");
       sb.writeln();
+
+      // Generate nested patch method for function-based patching
+      var cleanPatchType = patchType.replaceAll('?', '');
+      sb.writeln(
+        "  ${classNameTrimmed}Patch with${capitalizedName}PatchFunc($cleanPatchType Function($cleanPatchType) updater) {",
+      );
+      sb.writeln("    final patcher = updater($cleanPatchType());");
+      sb.writeln("    _patch[$enumName.$name] = patcher;");
+      sb.writeln("    return this;");
+      sb.writeln("  }");
+      sb.writeln();
+    }
+
+    // Handle List types containing Morphy objects
+    if (baseType.startsWith('List<') && baseType.contains('>')) {
+      var listTypeMatch = RegExp(r'List<([^>]+)>').firstMatch(baseType);
+      if (listTypeMatch != null) {
+        var listItemType = listTypeMatch.group(1)?.replaceAll('?', '') ?? '';
+        if (knownClasses.contains(listItemType)) {
+          var itemPatchType = '${listItemType}Patch';
+          sb.writeln(
+            "  ${classNameTrimmed}Patch update${capitalizedName}At(int index, $itemPatchType Function($itemPatchType) updater) {",
+          );
+          sb.writeln("    final patcher = updater($itemPatchType());");
+          sb.writeln(
+            "    _patch[$enumName.$name] = (List<$listItemType>? currentList) {",
+          );
+          sb.writeln(
+            "      if (currentList == null || index < 0 || index >= currentList.length) return currentList;",
+          );
+          sb.writeln(
+            "      final updatedList = List<$listItemType>.from(currentList);",
+          );
+          sb.writeln(
+            "      updatedList[index] = currentList[index].patchWith$listItemType(patchInput: patcher);",
+          );
+          sb.writeln("      return updatedList;");
+          sb.writeln("    };");
+          sb.writeln("    return this;");
+          sb.writeln("  }");
+          sb.writeln();
+        }
+      }
+    }
+
+    // Handle Map types with Morphy object values
+    if (baseType.startsWith('Map<') && baseType.contains('>')) {
+      var mapTypeMatch = RegExp(
+        r'Map<([^,]+),\s*([^>]+)>',
+      ).firstMatch(baseType);
+      if (mapTypeMatch != null) {
+        var keyType = mapTypeMatch.group(1)?.trim().replaceAll('?', '') ?? '';
+        var valueType = mapTypeMatch.group(2)?.trim().replaceAll('?', '') ?? '';
+        if (knownClasses.contains(valueType)) {
+          var valuePatchType = '${valueType}Patch';
+          sb.writeln(
+            "  ${classNameTrimmed}Patch update${capitalizedName}Value($keyType key, $valuePatchType Function($valuePatchType) updater) {",
+          );
+          sb.writeln("    final patcher = updater($valuePatchType());");
+          sb.writeln(
+            "    _patch[$enumName.$name] = (Map<$keyType, $valueType>? currentMap) {",
+          );
+          sb.writeln(
+            "      if (currentMap == null || !currentMap.containsKey(key)) return currentMap;",
+          );
+          sb.writeln(
+            "      final updatedMap = Map<$keyType, $valueType>.from(currentMap);",
+          );
+          sb.writeln(
+            "      updatedMap[key] = currentMap[key]!.patchWith$valueType(patchInput: patcher);",
+          );
+          sb.writeln("      return updatedMap;");
+          sb.writeln("    };");
+          sb.writeln("    return this;");
+          sb.writeln("  }");
+          sb.writeln();
+        }
+      }
     }
   }
 

@@ -6,7 +6,6 @@ It's a bit like freezed or built_value but inheritance is allowed and polymorphi
 We need a way to simplify our Dart classes, support polymorphism and allow copying and changing our classes.
 
 ### Why Not Freezed or Built Value?
-Well the main reason; I actually wrote this before Freezed was released.
 Freezed is really good, established and well used.
 However if you want to use both inheritance and polymorphism use Morphy.
 
@@ -513,6 +512,75 @@ var result = user
   .copyWithUser(email: () => "final@example.com");
 ```
 
+#### Advanced Nested Patching
+
+For complex object hierarchies, Morphy supports deep patching of nested objects and collections:
+
+```dart
+@morphy
+abstract class $Profile {
+  String get name;
+  int get age;
+}
+
+@morphy
+abstract class $Address {
+  String get street;
+  String get city;
+  String get zipCode;
+}
+
+@morphy
+abstract class $Contact {
+  String get email;
+  String? get phone;
+}
+
+@morphy
+abstract class $Customer {
+  String get name;
+  $Profile get profile;
+  List<$Address> get addresses;
+  Map<String, $Contact> get contacts;
+}
+```
+
+**Function-based nested patching:**
+```dart
+final customerPatch = CustomerPatch.create()
+  ..withName('Updated Customer')
+  ..withProfilePatchFunc((patch) => patch
+    ..withName('New Profile Name')
+    ..withAge(35))
+  ..updateAddressesAt(0, (patch) => patch
+    ..withStreet('123 New Street')
+    ..withCity('New City'))
+  ..updateContactsValue('work', (patch) => patch
+    ..withEmail('new.work@company.com')
+    ..withPhone('555-0123'));
+
+final updatedCustomer = customerPatch.applyTo(originalCustomer);
+```
+
+**Generated nested patch methods:**
+- `withProfilePatch(ProfilePatch value)` - Direct patch application
+- `withProfilePatchFunc(ProfilePatch Function(ProfilePatch) updater)` - Function-based patching
+- `updateAddressesAt(int index, AddressPatch Function(AddressPatch) updater)` - List item patching
+- `updateContactsValue(String key, ContactPatch Function(ContactPatch) updater)` - Map value patching
+
+**Deep multi-level patching:**
+```dart
+// Complex nested updates in a single patch operation
+final complexPatch = CustomerPatch.create()
+  ..updateAddressesAt(0, (addressPatch) => addressPatch
+    ..withStreet('Deep Update Street'))
+  ..updateContactsValue('primary', (contactPatch) => contactPatch
+    ..withEmail('deeply.updated@example.com'));
+
+// Only the specified nested fields are updated, everything else preserved
+final result = complexPatch.applyTo(customer);
+```
+
 #### Use Cases
 
 - **State Management**: Track and apply incremental changes
@@ -520,6 +588,8 @@ var result = user
 - **Undo/Redo**: Store patches for reversible operations
 - **Form Handling**: Apply form changes without rebuilding entire objects
 - **Change Tracking**: Compare object states and generate diffs
+- **Deep Object Updates**: Modify nested objects without replacing entire hierarchies
+- **Collection Management**: Update specific items in Lists and Maps while preserving others
 
 ### Other
 

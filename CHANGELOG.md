@@ -1,9 +1,9 @@
 # Changelog
 
-All notable changes to the ZikZak Morphy package will be documented in this file.
+## [2.7.0] - 2025-07-16
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+### Added
+**Nested Patch Operations** - Deep patching support for complex object hierarchies
 
 ## [2.0.0] - 2024-12-19
 
@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Factory Constructor Support** - Define named constructors with custom logic directly in abstract classes
 - **Self-Referencing Classes** - Full support for tree structures and hierarchical data (TreeNode pattern)
 - **Advanced Inheritance Examples** - Person → Employee → Manager transformation patterns
+- **Collection Patching** - Specialized methods for updating Lists and Maps containing Morphy objects
+- **Function-based Patch Methods** - Fluent API for building complex nested patches
 - Improved type safety for constructor parameter generation
 - Better error handling for patch-based operations
 - Comprehensive documentation with real-world examples
@@ -55,7 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 abstract class $User {
   String get name;
   int get age;
-  
+
   factory $User.create(String name, int age) =>
       User._(name: name, age: age);
 }
@@ -70,12 +72,42 @@ abstract class $TreeNode {
   String get value;
   List<$TreeNode>? get children;
   $TreeNode? get parent;
-  
+
   factory $TreeNode.root(String value) =>
       TreeNode._(value: value, children: [], parent: null);
 }
 
 // Usage: TreeNode.root("Root")
+```
+
+#### Nested Patch Operations
+```dart
+@Morphy()
+abstract class $Profile {
+  String get name;
+  int get age;
+}
+
+@Morphy()
+abstract class $Customer {
+  String get email;
+  $Profile get profile;
+  List<$Store> get favoriteStores;
+  Map<String, $Contact> get contacts;
+}
+
+// Deep nested patching with function-based approach
+final customerPatch = CustomerPatch.create()
+  ..withEmail('new@example.com')
+  ..withProfilePatchFunc((patch) => patch
+    ..withName('Updated Name')
+    ..withAge(35))
+  ..updateFavoriteStoresAt(0, (patch) => patch
+    ..withName('Updated Store'))
+  ..updateContactsValue('work', (patch) => patch
+    ..withPhone('555-0123'));
+
+final updatedCustomer = customerPatch.applyTo(originalCustomer);
 ```
 
 #### Enhanced Type Transformations

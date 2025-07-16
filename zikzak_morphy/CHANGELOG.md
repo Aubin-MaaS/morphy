@@ -1,3 +1,8 @@
+## 2.7.0 - 2025-07-16
+
+* Support nested patch operations with List and Map support
+* Updated dependencies to use hosted references
+
 ## 2.6.0 - 2025-07-15
 
 * fixed: non sealed abstract classes was not generating json when generateJson was set true

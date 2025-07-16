@@ -22,6 +22,7 @@ String createMorphy(
   bool generateCompareTo,
   bool generateCopyWithFn,
   List<FactoryMethodInfo> factoryMethods,
+  Map<String, dynamic> allAnnotatedClasses,
 ) {
   //recursively go through otherClasses and get my fieldnames &
 
@@ -188,6 +189,7 @@ String createMorphy(
       (i) => i.interfaceName.replaceAll("\$", ""),
     ),
     classNameTrimmed,
+    ...allAnnotatedClasses.keys.map((name) => name.replaceAll("\$", "")),
   ].toSet().toList();
 
   if (!isAbstract || (isAbstract && nonSealed)) {
