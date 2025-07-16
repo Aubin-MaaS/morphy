@@ -1,3 +1,8 @@
+## 2.8.0 - 2025-07-16
+
+* support patchWith nested for complex classes
+* Updated dependencies to use hosted references
+
 ## 2.7.0 - 2025-07-16
 
 * Support nested patch operations with List and Map support
