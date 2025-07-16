@@ -420,8 +420,13 @@ String getPatchClass(
         !field.isEnum &&
         !isPatchGenericType &&
         knownClasses.contains(cleanPatchBaseType)) {
+      // Use type name instead of field name for patch methods
+      var capitalizedTypeName =
+          cleanPatchBaseType.substring(0, 1).toUpperCase() +
+          cleanPatchBaseType.substring(1);
+
       sb.writeln(
-        "  ${classNameTrimmed}Patch with${capitalizedName}Patch(${patchType} value) {",
+        "  ${classNameTrimmed}Patch with${capitalizedTypeName}Patch(${patchType} value) {",
       );
       sb.writeln("    _patch[$enumName.$name] = value;");
       sb.writeln("    return this;");
@@ -431,7 +436,7 @@ String getPatchClass(
       // Generate nested patch method for function-based patching
       var cleanPatchType = patchType.replaceAll('?', '');
       sb.writeln(
-        "  ${classNameTrimmed}Patch with${capitalizedName}PatchFunc($cleanPatchType Function($cleanPatchType) updater) {",
+        "  ${classNameTrimmed}Patch with${capitalizedTypeName}PatchFunc($cleanPatchType Function($cleanPatchType) updater) {",
       );
       sb.writeln("    final patcher = updater($cleanPatchType());");
       sb.writeln("    _patch[$enumName.$name] = patcher;");

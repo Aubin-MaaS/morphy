@@ -2,14 +2,15 @@ import 'package:zikzak_morphy_annotation/morphy_annotation.dart';
 import 'package:test/test.dart';
 
 part 'withPatch_morphy_types_test.morphy.dart';
+part 'withPatch_morphy_types_test.g.dart';
 
-@morphy
+@Morphy(generateJson: true)
 abstract class $Profile {
   String get name;
   int get age;
 }
 
-@morphy
+@Morphy(generateJson: true)
 abstract class $User {
   String get email;
   $Profile get profile;
