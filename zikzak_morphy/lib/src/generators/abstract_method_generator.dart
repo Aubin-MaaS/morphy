@@ -32,6 +32,11 @@ class AbstractMethodGenerator {
     required String interfaceName,
     required List<NameType> interfaceGenerics,
   }) {
+    // Don't generate patch methods for classes with no fields
+    if (interfaceFields.isEmpty) {
+      return '';
+    }
+
     final cleanInterfaceName = NameCleaner.clean(interfaceName);
     final typeParams = TypeResolver.generateTypeParams(
       interfaceGenerics,
@@ -72,6 +77,11 @@ class AbstractMethodGenerator {
     required String interfaceName,
     required List<NameType> interfaceGenerics,
   }) {
+    // Don't generate patch methods for classes with no fields
+    if (interfaceFields.isEmpty) {
+      return '';
+    }
+
     final cleanInterfaceName = NameCleaner.clean(interfaceName);
     final typeParams = TypeResolver.generateTypeParams(
       interfaceGenerics,

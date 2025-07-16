@@ -96,7 +96,7 @@ class ChangeToMethodGenerator {
     bool hidePublicConstructor = false,
   }) {
     final cleanClassName = NameCleaner.clean(className);
-    final typeParams = TypeResolver.generateTypeParams(classGenerics);
+    // final typeParams = TypeResolver.generateTypeParams(classGenerics);
 
     final parameters = ParameterGenerator.generateCopyWithParameters(
       classFields,
@@ -212,7 +212,7 @@ class ChangeToMethodGenerator {
     }
 
     final cleanInterfaceName = NameCleaner.clean(interfaceName);
-    final typeParams = TypeResolver.generateTypeParams(interfaceGenerics);
+    // final typeParams = TypeResolver.generateTypeParams(interfaceGenerics);
 
     final parameters = ParameterGenerator.generateFunctionParameters(
       interfaceFields,
@@ -266,7 +266,7 @@ class ChangeToMethodGenerator {
     if (interfaceHidePublicConstructor) return '';
 
     final cleanInterfaceName = NameCleaner.clean(interfaceName);
-    final typeParams = TypeResolver.generateTypeParams(interfaceGenerics);
+    // final typeParams = TypeResolver.generateTypeParams(interfaceGenerics);
 
     // Only generate parameters for fields that are NOT preserved
     final preserveFieldNames = preserveFields.map((f) => f.name).toSet();
@@ -314,9 +314,9 @@ class ChangeToMethodGenerator {
     List<String> knownClasses,
   ) {
     final preserveFieldNames = preserveFields.map((f) => f.name).toSet();
-    final genericTypeNames = genericParams
-        .map((g) => FieldTypeAnalyzer.cleanType(g.type))
-        .toSet();
+    // final genericTypeNames = genericParams
+    //     .map((g) => FieldTypeAnalyzer.cleanType(g.type))
+    //     .toSet();
 
     final constructorFields = targetFields.map((f) {
       final name = MethodGeneratorCommons.getCleanFieldName(f.name);

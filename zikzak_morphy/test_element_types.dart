@@ -1,5 +1,3 @@
-import 'package:analyzer/dart/element/element.dart';
-
 void main() {
   // Test to see what ClassElement types are available
   print('Available element types:');

@@ -40,17 +40,17 @@ abstract class $AdvancedCustomer implements $AdvancedUser {
 
 main() {
   group('withPatch method generation for advanced Morphy types', () {
-    test('should generate withCustomerProfilePatch method using type name', () {
+    test('should generate withProfilePatch method using field name', () {
       // Create a CustomerProfile patch
       CustomerProfilePatch customerProfilePatch = CustomerProfilePatch.create()
         ..withName('Advanced Customer')
         ..withAge(45);
 
-      // Create an AdvancedCustomer patch using withCustomerProfilePatch method
+      // Create an AdvancedCustomer patch using withProfilePatch method
       AdvancedCustomerPatch advancedCustomerPatch =
           AdvancedCustomerPatch.create()
             ..withEmail('advanced@example.com')
-            ..withCustomerProfilePatch(customerProfilePatch);
+            ..withProfilePatch(customerProfilePatch);
 
       // Verify the patch objects contain expected data
       final advancedCustomerPatchMap = advancedCustomerPatch.toPatch();
@@ -65,12 +65,12 @@ main() {
       );
     });
 
-    test('should generate withCustomerProfilePatchFunc method', () {
+    test('should generate withProfilePatchFunc method', () {
       // Create an AdvancedCustomer patch using function-based patch method
       AdvancedCustomerPatch advancedCustomerPatch =
           AdvancedCustomerPatch.create()
             ..withEmail('functional@example.com')
-            ..withCustomerProfilePatchFunc(
+            ..withProfilePatchFunc(
               (patch) => patch
                 ..withName('Functional Customer')
                 ..withAge(50),
@@ -99,7 +99,7 @@ main() {
       expect(customerProfilePatchMap[CustomerProfile$.age], equals(50));
     });
 
-    test('should apply nested patches correctly with CustomerProfile', () {
+    test('should apply nested patches correctly with profile field', () {
       // Create initial objects
       final initialCustomerProfile = CustomerProfile(
         name: 'Initial Customer',
@@ -113,7 +113,7 @@ main() {
         profile: initialCustomerProfile,
       );
 
-      // Create patches with withCustomerProfilePatch method
+      // Create patches with withProfilePatch method
       CustomerProfilePatch customerProfilePatch = CustomerProfilePatch.create()
         ..withName('Updated Customer')
         ..withAge(35);
@@ -121,7 +121,7 @@ main() {
       AdvancedCustomerPatch advancedCustomerPatch =
           AdvancedCustomerPatch.create()
             ..withEmail('updated@example.com')
-            ..withCustomerProfilePatch(customerProfilePatch);
+            ..withProfilePatch(customerProfilePatch);
 
       // Apply the patch
       final updatedAdvancedCustomer = advancedCustomerPatch.applyTo(

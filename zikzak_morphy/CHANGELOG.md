@@ -1,3 +1,8 @@
+## 2.8.1 - 2025-07-16
+
+* fixed warnings, cleaner output
+* Updated dependencies to use hosted references
+
 ## 2.8.0 - 2025-07-16
 
 * support patchWith nested for complex classes

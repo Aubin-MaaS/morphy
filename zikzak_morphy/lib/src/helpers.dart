@@ -3,8 +3,6 @@ import 'package:dartx/dartx.dart';
 import 'package:zikzak_morphy/src/common/NameType.dart';
 import 'package:zikzak_morphy/src/common/classes.dart';
 
-import 'method_generator.dart';
-
 // import 'package:meta/meta.dart';
 
 // String extension for capitalize functionality
@@ -231,50 +229,8 @@ String getPatchClass(
   List<String> genericTypeNames = const [],
 ]) {
   if (fields.isEmpty) {
-    // Generate a minimal patch class for classes with no fields
-    String classNameTrimmed = '${className.replaceAll("\$", "")}';
-    var sb = StringBuffer();
-
-    sb.writeln(
-      "class ${classNameTrimmed}Patch implements Patch<$classNameTrimmed> {",
-    );
-    sb.writeln();
-
-    sb.writeln(
-      "  static ${classNameTrimmed}Patch create([Map<String, dynamic>? diff]) {",
-    );
-    sb.writeln("    return ${classNameTrimmed}Patch();");
-    sb.writeln("  }");
-    sb.writeln();
-
-    sb.writeln(
-      "  static ${classNameTrimmed}Patch fromPatch(Map<String, dynamic> patch) {",
-    );
-    sb.writeln("    return ${classNameTrimmed}Patch();");
-    sb.writeln("  }");
-    sb.writeln();
-
-    sb.writeln("  Map<String, dynamic> toPatch() => {};");
-    sb.writeln();
-
-    sb.writeln("  $classNameTrimmed applyTo($classNameTrimmed entity) {");
-    sb.writeln(
-      "    return entity.patchWith$classNameTrimmed(patchInput: this);",
-    );
-    sb.writeln("  }");
-    sb.writeln();
-
-    sb.writeln("  Map<String, dynamic> toJson() => {};");
-    sb.writeln();
-
-    sb.writeln(
-      "  static ${classNameTrimmed}Patch fromJson(Map<String, dynamic> json) {",
-    );
-    sb.writeln("    return ${classNameTrimmed}Patch();");
-    sb.writeln("  }");
-    sb.writeln("}");
-
-    return sb.toString();
+    // Don't generate patch classes for classes with no fields
+    return '';
   }
 
   String classNameTrimmed = '${className.replaceAll("\$", "")}';
@@ -420,13 +376,8 @@ String getPatchClass(
         !field.isEnum &&
         !isPatchGenericType &&
         knownClasses.contains(cleanPatchBaseType)) {
-      // Use type name instead of field name for patch methods
-      var capitalizedTypeName =
-          cleanPatchBaseType.substring(0, 1).toUpperCase() +
-          cleanPatchBaseType.substring(1);
-
       sb.writeln(
-        "  ${classNameTrimmed}Patch with${capitalizedTypeName}Patch(${patchType} value) {",
+        "  ${classNameTrimmed}Patch with${capitalizedName}Patch(${patchType} value) {",
       );
       sb.writeln("    _patch[$enumName.$name] = value;");
       sb.writeln("    return this;");
@@ -436,7 +387,7 @@ String getPatchClass(
       // Generate nested patch method for function-based patching
       var cleanPatchType = patchType.replaceAll('?', '');
       sb.writeln(
-        "  ${classNameTrimmed}Patch with${capitalizedTypeName}PatchFunc($cleanPatchType Function($cleanPatchType) updater) {",
+        "  ${classNameTrimmed}Patch with${capitalizedName}PatchFunc($cleanPatchType Function($cleanPatchType) updater) {",
       );
       sb.writeln("    final patcher = updater($cleanPatchType());");
       sb.writeln("    _patch[$enumName.$name] = patcher;");

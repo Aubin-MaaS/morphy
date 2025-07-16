@@ -509,7 +509,7 @@ $imports
       var source = constructor.source.contents.data;
       var factoryName = constructor.name;
       var originalClassName = constructor.enclosingElement3.name;
-      var className = originalClassName.replaceAll('\$', '');
+      // var className = originalClassName.replaceAll('\$', '');
 
       // Create a more flexible pattern that handles multi-line factory methods
       // First escape special regex characters in class and factory names - use original name with $

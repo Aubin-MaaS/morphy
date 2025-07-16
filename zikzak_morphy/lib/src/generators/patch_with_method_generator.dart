@@ -19,6 +19,10 @@ class PatchWithMethodGenerator {
     bool nonSealed = false,
     bool hidePublicConstructor = false,
   }) {
+    // Don't generate patch methods for classes with no fields
+    if (interfaceFields.isEmpty) {
+      return '';
+    }
     // For nonSealed classes, allow method generation even if interface name starts with $$
     // if it's the class's own interface (cleaned names match)
     if (NameCleaner.isAbstract(interfaceName)) {
@@ -70,6 +74,10 @@ class PatchWithMethodGenerator {
     List<String> knownClasses = const [],
     bool hidePublicConstructor = false,
   }) {
+    // Don't generate patch methods for classes with no fields
+    if (classFields.isEmpty) {
+      return '';
+    }
     final cleanClassName = NameCleaner.clean(className);
     final typeParams = TypeResolver.generateTypeParams(
       classGenerics,
@@ -228,6 +236,11 @@ class PatchWithMethodGenerator {
     bool nonSealed = false,
     bool hidePublicConstructor = false,
   }) {
+    // Don't generate patch methods for classes with no fields
+    if (interfaceFields.isEmpty) {
+      return '';
+    }
+
     if (NameCleaner.isAbstract(interfaceName)) return '';
 
     final cleanClassName = NameCleaner.clean(className);

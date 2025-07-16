@@ -14,13 +14,13 @@ abstract class $$ApiResponse {
   String get message;
   DateTime get timestamp;
 
-  factory $$ApiResponse.success(String message) => ApiResponse._(
+  factory $$ApiResponse.success(String message) => ApiResponse(
     status: "success",
     message: message,
     timestamp: DateTime.parse("2023-01-01T00:00:00Z"),
   );
 
-  factory $$ApiResponse.error(String error) => ApiResponse._(
+  factory $$ApiResponse.error(String error) => ApiResponse(
     status: "error",
     message: error,
     timestamp: DateTime.parse("2023-01-01T00:00:00Z"),

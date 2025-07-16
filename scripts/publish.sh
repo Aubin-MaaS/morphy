@@ -44,6 +44,44 @@ check_package_on_pubdev() {
     fi
 }
 
+# Function to test if a package version can actually be resolved by pub get
+test_package_resolution() {
+    local package_name=$1
+    local version=$2
+
+    echo -e "${BLUE}Testing if $package_name version $version can be resolved by pub get...${NC}"
+
+    # Create a temporary directory for testing
+    local temp_dir=$(mktemp -d)
+    cd "$temp_dir"
+
+    # Create a minimal pubspec.yaml to test dependency resolution
+    cat > pubspec.yaml << EOF
+name: test_resolution
+description: Temporary project to test dependency resolution
+version: 1.0.0
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  $package_name: ^$version
+EOF
+
+    # Try to resolve dependencies
+    if dart pub get > /dev/null 2>&1; then
+        echo -e "${GREEN}Package $package_name version $version can be resolved successfully!${NC}"
+        cd "$PROJECT_DIR"
+        rm -rf "$temp_dir"
+        return 0
+    else
+        echo -e "${YELLOW}Package $package_name version $version cannot be resolved yet (pub.dev propagation delay)${NC}"
+        cd "$PROJECT_DIR"
+        rm -rf "$temp_dir"
+        return 1
+    fi
+}
+
 # Function to check if all dependencies of a package are available on pub.dev
 check_dependencies() {
     local package_dir="$1"
@@ -61,23 +99,23 @@ check_dependencies() {
 
     echo -e "${BLUE}Checking dependencies for $package_dir...${NC}"
 
-    # Check if zikzak_morphy_annotation is available
+    # Check if zikzak_morphy_annotation is available and can be resolved
     local retry_count=0
     while [ $retry_count -lt $max_retries ]; do
-        if check_package_on_pubdev "zikzak_morphy_annotation" "$version"; then
+        if check_package_on_pubdev "zikzak_morphy_annotation" "$version" && test_package_resolution "zikzak_morphy_annotation" "$version"; then
+            echo -e "${GREEN}Dependency zikzak_morphy_annotation version $version is fully available and resolvable!${NC}"
             break
         else
             retry_count=$((retry_count + 1))
             if [ $retry_count -lt $max_retries ]; then
-                echo -e "${YELLOW}Dependency zikzak_morphy_annotation not available yet. Waiting ${retry_interval}s before retry ($retry_count/$max_retries)...${NC}"
+                echo -e "${YELLOW}Dependency zikzak_morphy_annotation not fully available yet (API published but not resolvable). Waiting ${retry_interval}s before retry ($retry_count/$max_retries)...${NC}"
                 sleep $retry_interval
             else
-                echo -e "${RED}Dependency zikzak_morphy_annotation version $version is required but not available on pub.dev after $max_retries retries.${NC}"
-                echo -e "${RED}Make sure it has been published before proceeding.${NC}"
+                echo -e "${RED}Dependency zikzak_morphy_annotation version $version is required but not resolvable after $max_retries retries.${NC}"
+                echo -e "${RED}There may be a pub.dev propagation delay. Try again later.${NC}"
                 return 1
             fi
         fi
-        sleep 30
     done
 
     echo -e "${GREEN}All dependencies for $package_dir are available on pub.dev!${NC}"
@@ -154,6 +192,7 @@ for package in "${PACKAGES[@]}"; do
         exit 1
     fi
 done
+tag=$(grep "^version:" "$PROJECT_DIR/zikzak_morphy/pubspec.yaml" | sed 's/version: //' | tr -d '[:space:]')
 
 echo -e "${GREEN}All packages published successfully!${NC}"
 echo -e ""
@@ -162,6 +201,6 @@ echo -e "1. ${YELLOW}To revert to development setup (keep branch):${NC}"
 echo -e "   ./scripts/restore_dev_mode.sh"
 echo -e ""
 echo -e "2. ${YELLOW}To merge changes to master and create tag:${NC}"
-echo -e "   git checkout master && git merge $(git branch --show-current) && git tag v$(grep '^version:' \"$PROJECT_DIR/zikzak_morphy/pubspec.yaml\" | sed 's/version: //' | tr -d '[:space:]') && git push origin master --tags"
+echo -e "   git checkout master && git merge $(git branch --show-current) && git tag v$tag && git push origin master --tags"
 echo -e ""
 echo -e "${GREEN}🔥🔥🔥 MORPHY PACKAGES PUBLISHED! CODING BEAST MODE ACTIVATED! 🔥🔥🔥${NC}"

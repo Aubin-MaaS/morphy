@@ -128,8 +128,9 @@ String createMorphy(
       if (!hidePublicConstructor) {
         sb.writeln("${classNameTrimmed}();");
         sb.writeln('\n');
+      } else {
+        sb.writeln("${classNameTrimmed}._();");
       }
-      sb.writeln("${classNameTrimmed}._();");
     } else {
       //public constructor
       if (!hidePublicConstructor) {
@@ -145,11 +146,13 @@ String createMorphy(
         sb.writeln("}) ${getInitializer(allFields)};");
       }
 
-      //we always want to write a private constructor (just a duplicate)
-      sb.writeln("${classNameTrimmed}._({");
-      sb.writeln(getConstructorRows(allFields));
-      sb.writeln("}) ${getInitializer(allFields)};");
-      sb.writeln('\n');
+      //only write a private constructor when hidePublicConstructor is true
+      if (hidePublicConstructor) {
+        sb.writeln("${classNameTrimmed}._({");
+        sb.writeln(getConstructorRows(allFields));
+        sb.writeln("}) ${getInitializer(allFields)};");
+        sb.writeln('\n');
+      }
 
       if (hasConstContructor) {
         sb.writeln("const ${classNameTrimmed}.constant({");

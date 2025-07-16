@@ -11,10 +11,10 @@ abstract class $$SimpleResponse {
   String get status;
 
   factory $$SimpleResponse.success(String message) =>
-      SimpleResponse._(message: message, status: "success");
+      SimpleResponse(message: message, status: "success");
 
   factory $$SimpleResponse.error(String error) =>
-      SimpleResponse._(message: error, status: "error");
+      SimpleResponse(message: error, status: "error");
 }
 
 @Morphy(generateJson: true)

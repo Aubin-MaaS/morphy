@@ -12,13 +12,12 @@ abstract class $Person {
   factory $Person.fromNames({
     required String firstName,
     required String lastName,
-  }) => Person._(firstName: firstName, lastName: lastName, age: null);
+  }) => Person(firstName: firstName, lastName: lastName, age: null);
 
   factory $Person.withAge(String firstName, String lastName, int age) =>
-      Person._(firstName: firstName, lastName: lastName, age: age);
+      Person(firstName: firstName, lastName: lastName, age: age);
 
-  factory $Person.empty() =>
-      Person._(firstName: null, lastName: null, age: null);
+  factory $Person.empty() => Person(firstName: null, lastName: null, age: null);
 }
 
 @Morphy(generateCopyWithFn: true)
@@ -36,7 +35,7 @@ abstract class $Employee implements $Person {
     required String firstName,
     required String lastName,
     required String department,
-  }) => Employee._(
+  }) => Employee(
     firstName: firstName,
     lastName: lastName,
     age: null,

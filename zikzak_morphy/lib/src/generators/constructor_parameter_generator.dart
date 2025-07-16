@@ -38,9 +38,9 @@ class ConstructorParameterGenerator {
     List<String> knownClasses,
   ) {
     final sourceFieldNames = sourceInterfaceFields.map((f) => f.name).toSet();
-    final genericTypeNames = genericParams
-        .map((g) => FieldTypeAnalyzer.cleanType(g.type))
-        .toSet();
+    // final genericTypeNames = genericParams
+    //     .map((g) => FieldTypeAnalyzer.cleanType(g.type))
+    //     .toSet();
 
     final constructorFields = targetClassFields.map((f) {
       final name = MethodGeneratorCommons.getCleanFieldName(f.name);
@@ -62,9 +62,9 @@ class ConstructorParameterGenerator {
             ? (_patchMap[$targetClassName\$.$name] is Function)
               ? _patchMap[$targetClassName\$.$name](this.${f.name})
               : (_patchMap[$targetClassName\$.$name] is $patchType)
-                ? (this.${f.name}?.patchWith$baseType(
+                ? (this.${f.name}${f.type?.endsWith('?') == true ? '?' : ''}.patchWith$baseType(
                     patchInput: _patchMap[$targetClassName\$.$name]
-                  ) ?? _patchMap[$targetClassName\$.$name])
+                  )${f.type?.endsWith('?') == true ? ' ?? _patchMap[$targetClassName\$.$name]' : ''})
                 : _patchMap[$targetClassName\$.$name]
             : this.${f.name}''';
         }
@@ -92,9 +92,9 @@ class ConstructorParameterGenerator {
     List<String> knownClasses,
   ) {
     final sourceFieldNames = sourceInterfaceFields.map((f) => f.name).toSet();
-    final genericTypeNames = genericParams
-        .map((g) => FieldTypeAnalyzer.cleanType(g.type))
-        .toSet();
+    // final genericTypeNames = genericParams
+    //     .map((g) => FieldTypeAnalyzer.cleanType(g.type))
+    //     .toSet();
 
     final constructorFields = targetClassFields.map((f) {
       final name = MethodGeneratorCommons.getCleanFieldName(f.name);
@@ -116,9 +116,9 @@ class ConstructorParameterGenerator {
             ? (_patchMap[$targetClassName\$.$name] is Function)
               ? _patchMap[$targetClassName\$.$name](this.${f.name})
               : (_patchMap[$targetClassName\$.$name] is $patchType)
-                ? (this.${f.name}?.patchWith$baseType(
+                ? (this.${f.name}${f.type?.endsWith('?') == true ? '?' : ''}.patchWith$baseType(
                     patchInput: _patchMap[$targetClassName\$.$name]
-                  ) ?? _patchMap[$targetClassName\$.$name])
+                  )${f.type?.endsWith('?') == true ? ' ?? _patchMap[$targetClassName\$.$name]' : ''})
                 : _patchMap[$targetClassName\$.$name]
             : this.${f.name}''';
         }
