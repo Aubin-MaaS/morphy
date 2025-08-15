@@ -112,13 +112,9 @@ String functionToString(FunctionType type) {
       })
       .join(', ')
   }>" : '';
-  final normal = type.normalParameterNames.mapIndexed(
-    (index, name) => "${typeToString(type.normalParameterTypes[index])} $name"
-  ).join(', ');
+  final normal = type.normalParameterTypes.map(typeToString).join(', ');
   final named = type.namedParameterTypes.mapEntries((entry) => "${entry.value.element!.hasRequired ? 'required ' : ''}${typeToString(entry.value)} ${entry.key}").join(', ');
-  final optional = type.optionalParameterNames.mapIndexed(
-    (index, name) => "${typeToString(type.optionalParameterTypes[index])} $name"
-  ).join(', ');
+  final optional = type.optionalParameterTypes.map(typeToString).join(', ');
   return "${typeToString(type.returnType)} Function$generics(${
     [if (normal.isNotEmpty) normal, if (named.isNotEmpty) "{$named}", if (optional.isNotEmpty) "[$optional]"].join(', ')
   })";

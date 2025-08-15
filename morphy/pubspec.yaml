@@ -12,7 +12,7 @@ environment:
 
 dependencies:
   morphy_annotation: ^1.1.0
-  analyzer:
+  analyzer: '>=6.0.0'
   build: ^2.1.0
   source_gen:
   dartx: ^1.2.0
